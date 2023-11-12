@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use App\Models\dinasLuar as ModelsDinasLuar;
+use App\Models\DinasLuar as ModelsDinasLuar;
 
 class DinasLuar extends Controller
 {

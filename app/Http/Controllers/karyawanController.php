@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cuti;
-use App\Models\dinasLuar;
+use App\Models\DinasLuar;
 use App\Models\Jabatan;
 use App\Models\Lembur;
 use App\Models\Lokasi;
@@ -352,7 +352,7 @@ class karyawanController extends Controller
         return view('karyawan.dinasluar', [
             'title' => 'Mapping Dinas Luar',
             'karyawan' => User::find($id),
-            'dinas_luar' => dinasLuar::where('user_id', $id)->orderBy('id', 'desc')->limit(100)->get(),
+            'dinas_luar' => DinasLuar::where('user_id', $id)->orderBy('id', 'desc')->limit(100)->get(),
             'shift' => Shift::all()
         ]);
     }
@@ -446,7 +446,7 @@ class karyawanController extends Controller
                 'status_absen' => 'required',
             ]);
 
-            dinasLuar::create($validatedData);
+            DinasLuar::create($validatedData);
         }
         return redirect('/pegawai/dinas-luar/' . $request["user_id"])->with('success', 'Data Berhasil di Tambahkan');
     }
@@ -460,7 +460,7 @@ class karyawanController extends Controller
 
     public function deleteDinas(Request $request, $id)
     {
-        $delete = dinasLuar::find($id);
+        $delete = DinasLuar::find($id);
         $delete->delete();
         return redirect('/pegawai/dinas-luar/' . $request["user_id"])->with('success', 'Data Berhasil di Delete');
     }
@@ -478,7 +478,7 @@ class karyawanController extends Controller
     {
         return view('karyawan.editdinas', [
             'title' => 'Edit Dinas',
-            'dinas_luar' => dinasLuar::find($id),
+            'dinas_luar' => DinasLuar::find($id),
             'shift' => Shift::all()
         ]);
     }
@@ -521,7 +521,7 @@ class karyawanController extends Controller
             'status_absen' => 'required'
         ]);
 
-        dinasLuar::where('id', $id)->update($validatedData);
+        DinasLuar::where('id', $id)->update($validatedData);
         return redirect('/pegawai/dinas-luar/' . $request["user_id"])->with('success', 'Data Berhasil di Update');
     }
 

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\dinasLuar;
+use App\Models\DinasLuar;
 use App\Models\Shift;
 use App\Models\MappingShift;
 
@@ -108,7 +108,7 @@ class ShiftController extends Controller
     public function destroy($id)
     {
         $check = MappingShift::where('shift_id', $id)->count();
-        $check2 = dinasLuar::where('shift_id', $id)->count();
+        $check2 = DinasLuar::where('shift_id', $id)->count();
         if ($check > 0 || $check2 > 0) {
             Alert::error('Failed', 'Masih Ada User Yang Menggunakan Shift Ini!');
             return back();

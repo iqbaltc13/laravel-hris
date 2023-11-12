@@ -17,16 +17,47 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $guarded = ['id'];
+    protected $guarded = [
+
+    ];
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::creating(function ($model) {
+            if (empty($model->{$model->getKeyName()})) {
+                $model->{$model->getKeyName()} = Str::uuid()->toString();
+            }
+        });
+    }
+     /**
+     * Get the value indicating whether the IDs are incrementing.
+     *
+     * @return bool
+     */
+    public function getIncrementing()
+    {
+        return false;
+    }
+
+    /**
+     * Get the auto-incrementing key type.
+     *
+     * @return string
+     */
+    public function getKeyType()
+    {
+        return 'string';
+    }
 
     public function MappingShift()
     {
         return $this->hasMany(MappingShift::class);
     }
     
-    public function dinasLuar()
+    public function DinasLuar()
     {
-        return $this->hasMany(dinasLuar::class);
+        return $this->hasMany(DinasLuar::class);
     }
     
     public function Sip()
