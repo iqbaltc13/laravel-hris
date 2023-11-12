@@ -14,7 +14,7 @@ class CreateCutisTable extends Migration
     public function up()
     {
         Schema::create('cutis', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->foreignId('user_id');
             $table->string('nama_cuti');
             $table->string('tanggal');
@@ -22,7 +22,12 @@ class CreateCutisTable extends Migration
             $table->string('foto_cuti')->nullable();
             $table->string('status_cuti');
             $table->string('catatan')->nullable();
-            $table->timestamps();
+            $table->uuid('created_by_id')->nullable();
+            $table->uuid('updated_by_id')->nullable();
+            $table->uuid('deleted_by_id')->nullable();
+            $table->dateTime('created_at')->nullable();
+            $table->dateTime('updated_at')->nullable();
+            $table->dateTime('deleted_at')->nullable();
         });
     }
 

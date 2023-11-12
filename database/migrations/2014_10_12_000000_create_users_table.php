@@ -14,7 +14,7 @@ class CreateUsersTable extends Migration
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->string('name');
             $table->string('foto_karyawan')->nullable();
             $table->string('foto_face_recognition')->nullable();
@@ -41,7 +41,12 @@ class CreateUsersTable extends Migration
             $table->foreignId('lokasi_id');
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
-            $table->timestamps();
+            $table->uuid('created_by_id')->nullable();
+            $table->uuid('updated_by_id')->nullable();
+            $table->uuid('deleted_by_id')->nullable();
+            $table->dateTime('created_at')->nullable();
+            $table->dateTime('updated_at')->nullable();
+            $table->dateTime('deleted_at')->nullable();
         });
     }
 

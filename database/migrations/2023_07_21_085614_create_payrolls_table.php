@@ -14,11 +14,11 @@ class CreatePayrollsTable extends Migration
     public function up()
     {
         Schema::create('payrolls', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->foreignId('user_id');
             $table->string('bulan');
             $table->string('tahun');
-            $table->unsignedBigInteger('status_id');
+            $table->uuid('status_id')->nullable();
             $table->foreign('status_id')->references('id')->on('status_ptkps');
             $table->decimal('gaji', 15, 2)->default(0);
             $table->decimal('pot_tunjangan_makan', 15, 2)->default(0);
@@ -32,7 +32,12 @@ class CreatePayrollsTable extends Migration
             $table->decimal('tunjangan_pph_21', 15, 2)->default(0);
             $table->decimal('pot_lainnya', 15, 2)->default(0);
             $table->decimal('lembur', 15, 2)->default(0);
-            $table->timestamps();
+            $table->uuid('created_by_id')->nullable();
+            $table->uuid('updated_by_id')->nullable();
+            $table->uuid('deleted_by_id')->nullable();
+            $table->dateTime('created_at')->nullable();
+            $table->dateTime('updated_at')->nullable();
+            $table->dateTime('deleted_at')->nullable();
         });
     }
 

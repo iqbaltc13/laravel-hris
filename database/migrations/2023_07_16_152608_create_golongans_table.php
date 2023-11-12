@@ -14,9 +14,14 @@ class CreateGolongansTable extends Migration
     public function up()
     {
         Schema::create('golongans', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->string('name');
-            $table->timestamps();
+            $table->uuid('created_by_id')->nullable();
+            $table->uuid('updated_by_id')->nullable();
+            $table->uuid('deleted_by_id')->nullable();
+            $table->dateTime('created_at')->nullable();
+            $table->dateTime('updated_at')->nullable();
+            $table->dateTime('deleted_at')->nullable();
         });
     }
 

@@ -14,7 +14,7 @@ class CreateLembursTable extends Migration
     public function up()
     {
         Schema::create('lemburs', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->foreignId('user_id');
             $table->string('tanggal');
             $table->string('jam_masuk');
@@ -30,9 +30,14 @@ class CreateLembursTable extends Migration
             $table->string('total_lembur')->nullable();
             $table->string('status')->nullable();
             $table->string('notes')->nullable();
-            $table->unsignedBigInteger('approved_by')->nullable();
+            $table->uuid('approved_by')->nullable();
             $table->foreign('approved_by')->references('id')->on('users');
-            $table->timestamps();
+            $table->uuid('created_by_id')->nullable();
+            $table->uuid('updated_by_id')->nullable();
+            $table->uuid('deleted_by_id')->nullable();
+            $table->dateTime('created_at')->nullable();
+            $table->dateTime('updated_at')->nullable();
+            $table->dateTime('deleted_at')->nullable();
         });
     }
 
