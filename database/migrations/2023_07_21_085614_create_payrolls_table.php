@@ -15,7 +15,7 @@ class CreatePayrollsTable extends Migration
     {
         Schema::create('payrolls', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignId('user_id');
+            $table->uuid('user_id')->nullable();
             $table->string('bulan');
             $table->string('tahun');
             $table->uuid('status_id')->nullable();

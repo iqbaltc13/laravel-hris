@@ -15,8 +15,8 @@ class CreateDinasLuarsTable extends Migration
     {
         Schema::create('dinas_luars', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignId('user_id');
-            $table->foreignId('shift_id');
+            $table->uuid('user_id')->nullable();
+            $table->uuid('shift_id')->nullable();
             $table->string('tanggal');
             $table->string('jam_absen')->nullable();
             $table->string('telat')->nullable();

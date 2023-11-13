@@ -15,7 +15,7 @@ class CreateSipsTable extends Migration
     {
         Schema::create('sips', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignId('user_id');
+            $table->uuid('user_id')->nullable();
             $table->string('nama_dokumen');
             $table->string('tanggal_berakhir');
             $table->string('file')->nullable();

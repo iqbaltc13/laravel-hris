@@ -15,7 +15,7 @@ class CreateCutisTable extends Migration
     {
         Schema::create('cutis', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignId('user_id');
+            $table->uuid('user_id')->nullable();
             $table->string('nama_cuti');
             $table->string('tanggal');
             $table->text('alasan_cuti');

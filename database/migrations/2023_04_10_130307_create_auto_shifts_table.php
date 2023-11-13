@@ -15,8 +15,8 @@ class CreateAutoShiftsTable extends Migration
     {
         Schema::create('auto_shifts', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignId('jabatan_id');
-            $table->foreignId('shift_id');
+            $table->uuid('jabatan_id')->nullable();
+            $table->uuid('shift_id')->nullable();
             $table->uuid('created_by_id')->nullable();
             $table->uuid('updated_by_id')->nullable();
             $table->uuid('deleted_by_id')->nullable();

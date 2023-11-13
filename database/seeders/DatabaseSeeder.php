@@ -124,7 +124,7 @@ class DatabaseSeeder extends Seeder
                 'is_admin' => 'admin',
                 'jabatan_id' => $jabatanTekInf->id,
                 'golongan_id' => $golonganDir->id,
-                'lokasi_id' => $kantorCabangA
+                'lokasi_id' => $kantorCabangA->id
             ]);
 
             $accountUser = User::create([
@@ -149,7 +149,7 @@ class DatabaseSeeder extends Seeder
                 'is_admin' => 'user',
                 'jabatan_id' => $jabatanKeuAkun->id,
                 'golongan_id' => $golonganDir->id,
-                'lokasi_id' => $kantorCabangA
+                'lokasi_id' => $kantorCabangA->id,
             ]);
 
         
@@ -191,19 +191,19 @@ class DatabaseSeeder extends Seeder
             ]);
 
             Tunjangan::create([
-                'golongan_id' => 1,
+                'golongan_id' => $golonganDir->id,
                 'tunjangan_makan' => '20000.00',
                 'tunjangan_transport' => '20000.00'
             ]);
 
             Tunjangan::create([
-                'golongan_id' => 2,
+                'golongan_id' => $golonganKabag->id,
                 'tunjangan_makan' => '30000.00',
                 'tunjangan_transport' => '20000.00'
             ]);
 
             Tunjangan::create([
-                'golongan_id' => 3,
+                'golongan_id' => $golonganStaff->id,
                 'tunjangan_makan' => '30000.00',
                 'tunjangan_transport' => '30000.00'
             ]);

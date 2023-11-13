@@ -15,7 +15,7 @@ class CreateTunjangansTable extends Migration
     {
         Schema::create('tunjangans', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignId('golongan_id');
+            $table->uuid('golongan_id');
             $table->decimal('tunjangan_makan', 15, 2)->default(0);
             $table->decimal('tunjangan_transport', 15, 2)->default(0);
             $table->uuid('created_by_id')->nullable();

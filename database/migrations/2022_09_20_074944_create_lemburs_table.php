@@ -15,7 +15,7 @@ class CreateLembursTable extends Migration
     {
         Schema::create('lemburs', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignId('user_id');
+            $table->uuid('user_id')->nullable();
             $table->string('tanggal');
             $table->string('jam_masuk');
             $table->string('lat_masuk');

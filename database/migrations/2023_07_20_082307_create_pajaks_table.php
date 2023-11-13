@@ -15,7 +15,7 @@ class CreatePajaksTable extends Migration
     {
         Schema::create('pajaks', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignId('user_id');
+            $table->uuid('user_id')->nullable();
             $table->uuid('status_id')->nullable();
             $table->foreign('status_id')->references('id')->on('status_ptkps');
             $table->string('bulan');

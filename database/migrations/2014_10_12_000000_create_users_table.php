@@ -36,10 +36,10 @@ class CreateUsersTable extends Migration
             $table->string('izin_pulang_cepat');
             $table->string('izin_lainnya');
             $table->string('is_admin');
-            $table->foreignId('jabatan_id');
-            $table->foreignId('golongan_id');
-            $table->foreignId('lokasi_id');
-            $table->timestamp('email_verified_at')->nullable();
+            $table->uuid('jabatan_id')->nullable();
+            $table->uuid('golongan_id')->nullable();
+            $table->uuid('lokasi_id')->nullable();
+            $table->dateTime('email_verified_at')->nullable();
             $table->rememberToken();
             $table->uuid('created_by_id')->nullable();
             $table->uuid('updated_by_id')->nullable();
