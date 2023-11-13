@@ -27,22 +27,36 @@ class UsersController extends Controller
     public function store(Request $request)
     {
            try {
-            $validatedData = $request->validate([
-                'name' => 'required',
-                'email' => 'required|email:dns|unique:users',
-                'password' => 'required|confirmed|min:6'
-            ]);
-            $validatedData['password'] = Hash::make($validatedData['password']);
-            $users = User::create($validatedData);
-            $data = User::where('id', $users->id);
+                $validatedData = $request->validate([
+                    'name' => 'required',
+                    'email' => 'required|email:dns|unique:users',
+                    'password' => 'required|confirmed|min:6'
+                ]);
+                $validatedData['password'] = Hash::make($validatedData['password']);
+                DB::beginTransaction();
+
+
+                try {
+                    $users = User::create($validatedData);
+                    DB::commit();
+
+                    // all good
+                } catch (QueryException $e) {
+                
+                    DB::rollback();
+                    return ApiFormatter::createApi(400, 'Failed');
+                    // something went wrong
+                }
             
-            if($data){
-                return ApiFormatter::createApi(200, 'Success', $data);
-            }else{
-                return ApiFormatter::createApi(400, 'Failed');
-            }
+                $data = User::where('id', $users->id);
+                
+                if($data){
+                    return ApiFormatter::createApi(200, 'Success', $data);
+                }else{
+                    return ApiFormatter::createApi(400, 'Failed');
+                }
            } catch(Exception $error) {
-            return ApiFormatter::createApi(400, 'Failed');
+                return ApiFormatter::createApi(400, 'Failed');
            }
     }
 }

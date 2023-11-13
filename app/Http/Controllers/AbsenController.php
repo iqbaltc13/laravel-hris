@@ -107,8 +107,19 @@ class AbsenController extends Controller
                 'jarak_masuk' => 'required',
                 'status_absen' => 'required'
             ]);
-    
-            MappingShift::where('id', $id)->update($validatedData);
+            DB::beginTransaction();
+            try {
+                MappingShift::where('id', $id)->update($validatedData);
+                DB::commit();
+
+                // all good
+            } catch (QueryException $e) {
+            
+                DB::rollback();
+                return back()->withErrors(['msg' => 'Gagal Absen Masuk']);
+                // something went wrong
+            }
+            
 
             $request->session()->flash('success', 'Berhasil Absen Masuk');
     
@@ -181,8 +192,19 @@ class AbsenController extends Controller
                 'pulang_cepat' => 'required',
                 'jarak_pulang' => 'required'
             ]);
+            DB::beginTransaction();
+            try {
+                MappingShift::where('id', $id)->update($validatedData);
+                DB::commit();
 
-            MappingShift::where('id', $id)->update($validatedData);
+                // all good
+            } catch (QueryException $e) {
+            
+                DB::rollback();
+                return back()->withErrors(['msg' => 'Gagal Absen Pulang']);
+                // something went wrong
+            }
+           
     
             return redirect('/absen')->with('success', 'Berhasil Absen Pulang');
         }
@@ -298,8 +320,19 @@ class AbsenController extends Controller
             }
             $validatedData['foto_jam_absen'] = $request->file('foto_jam_absen')->store('foto_jam_absen');
         }
+        DB::beginTransaction();
+        try {
+            MappingShift::where('id', $id)->update($validatedData);
+            DB::commit();
 
-        MappingShift::where('id', $id)->update($validatedData);
+                // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'Gagal Edit Absen Masuk ']);
+            // something went wrong
+        }
+        
         return redirect('/data-absen')->with('success', 'Berhasil Edit Absen Masuk (Manual)');
     }
 
@@ -366,8 +399,20 @@ class AbsenController extends Controller
             }
             $validatedData['foto_jam_pulang'] = $request->file('foto_jam_pulang')->store('foto_jam_pulang');
         }
+        DB::beginTransaction();
+        try {
+            MappingShift::where('id', $id)->update($validatedData);
+            DB::commit();
 
-        MappingShift::where('id', $id)->update($validatedData);
+                // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'Gagal Edit Absen Pulang ']);
+            // something went wrong
+        }
+
+        
 
         return redirect('/data-absen')->with('success', 'Berhasil Edit Absen Pulang (Manual)');
     }
@@ -377,6 +422,18 @@ class AbsenController extends Controller
         $delete = MappingShift::find($id);
         Storage::delete($delete->foto_jam_absen);
         Storage::delete($delete->foto_jam_pulang);
+        DB::beginTransaction();
+        try {
+            $delete->delete();
+            DB::commit();
+
+                // all good
+        } catch (QueryException $e) {
+            
+                DB::rollback();
+                return back()->withErrors(['msg' => 'Gagal Delete Data']);
+                // something went wrong
+        }
         $delete->delete();
         return redirect('/data-absen')->with('success', 'Data Berhasil di Delete');
     }
