@@ -1,8 +1,8 @@
 <?php
 
-use App\Http\Controllers\DinasLuar;
+use App\Http\Controllers\DinasLuarController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\authController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CutiController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\AbsenController;
@@ -10,12 +10,12 @@ use App\Http\Controllers\ShiftController;
 use App\Http\Controllers\LemburController;
 use App\Http\Controllers\LokasiController;
 use App\Http\Controllers\DokumenController;
-use App\Http\Controllers\jabatanController;
+use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\GolonganController;
-use App\Http\Controllers\karyawanController;
+use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\AutoShiftController;
-use App\Http\Controllers\dashboardController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PajakController;
 use App\Http\Controllers\RekapDataController;
 use App\Http\Controllers\StatusPtkpController;
@@ -32,59 +32,59 @@ use App\Http\Controllers\TunjanganController;
 |
 */
 
-Route::get('/', [authController::class, 'index'])->name('login')->middleware('guest');
-Route::get('/presensi', [authController::class, 'presensi'])->middleware('guest');
-Route::get('/presensi-pulang', [authController::class, 'presensiPulang'])->middleware('guest');
-Route::post('/presensi/store', [authController::class, 'presensiStore'])->middleware('guest');
-Route::post('/presensi-pulang/store', [authController::class, 'presensiPulangStore'])->middleware('guest');
-Route::get('/ajaxGetNeural', [authController::class, 'ajaxGetNeural'])->middleware('guest');
-Route::get('/register', [authController::class, 'register'])->middleware('guest');
-Route::post('/register-proses', [authController::class, 'registerProses'])->middleware('guest');
-Route::post('/login-proses', [authController::class, 'loginProses'])->middleware('guest');
-Route::get('/dashboard', [dashboardController::class, 'index'])->middleware('auth');
-Route::post('/logout', [authController::class, 'logout'])->middleware('auth');
-Route::get('/pegawai', [karyawanController::class, 'index'])->middleware('admin');
-Route::get('/pegawai/tambah-pegawai', [karyawanController::class, 'tambahKaryawan'])->middleware('admin');
-Route::post('/pegawai/tambah-pegawai-proses', [karyawanController::class, 'tambahKaryawanProses'])->middleware('admin');
-Route::post('/pegawai/face/ajaxPhoto', [karyawanController::class, 'ajaxPhoto'])->middleware('admin');
-Route::post('/pegawai/face/ajaxDescrip', [karyawanController::class, 'ajaxDescrip'])->middleware('admin');
-Route::post('/pegawai/import', [karyawanController::class, 'importUsers'])->middleware('admin');
-Route::get('/pegawai/detail/{id}', [karyawanController::class, 'detail'])->middleware('admin');
-Route::get('/pegawai/face/{id}', [karyawanController::class, 'face'])->middleware('admin');
-Route::put('/pegawai/proses-edit/{id}', [karyawanController::class, 'editKaryawanProses'])->middleware('admin');
-Route::delete('/pegawai/delete/{id}', [karyawanController::class, 'deleteKaryawan'])->middleware('admin');
-Route::get('/pegawai/edit-password/{id}', [karyawanController::class, 'editPassword'])->middleware('admin');
-Route::put('/pegawai/edit-password-proses/{id}', [karyawanController::class, 'editPasswordProses'])->middleware('admin');
+Route::get('/', [AuthController::class, 'index'])->name('login')->middleware('guest');
+Route::get('/presensi', [AuthController::class, 'presensi'])->middleware('guest');
+Route::get('/presensi-pulang', [AuthController::class, 'presensiPulang'])->middleware('guest');
+Route::post('/presensi/store', [AuthController::class, 'presensiStore'])->middleware('guest');
+Route::post('/presensi-pulang/store', [AuthController::class, 'presensiPulangStore'])->middleware('guest');
+Route::get('/ajaxGetNeural', [AuthController::class, 'ajaxGetNeural'])->middleware('guest');
+Route::get('/register', [AuthController::class, 'register'])->middleware('guest');
+Route::post('/register-proses', [AuthController::class, 'registerProses'])->middleware('guest');
+Route::post('/login-proses', [AuthController::class, 'loginProses'])->middleware('guest');
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('auth');
+Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth');
+Route::get('/pegawai', [KaryawanController::class, 'index'])->middleware('admin');
+Route::get('/pegawai/tambah-pegawai', [KaryawanController::class, 'tambahKaryawan'])->middleware('admin');
+Route::post('/pegawai/tambah-pegawai-proses', [KaryawanController::class, 'tambahKaryawanProses'])->middleware('admin');
+Route::post('/pegawai/face/ajaxPhoto', [KaryawanController::class, 'ajaxPhoto'])->middleware('admin');
+Route::post('/pegawai/face/ajaxDescrip', [KaryawanController::class, 'ajaxDescrip'])->middleware('admin');
+Route::post('/pegawai/import', [KaryawanController::class, 'importUsers'])->middleware('admin');
+Route::get('/pegawai/detail/{id}', [KaryawanController::class, 'detail'])->middleware('admin');
+Route::get('/pegawai/face/{id}', [KaryawanController::class, 'face'])->middleware('admin');
+Route::put('/pegawai/proses-edit/{id}', [KaryawanController::class, 'editKaryawanProses'])->middleware('admin');
+Route::delete('/pegawai/delete/{id}', [KaryawanController::class, 'deleteKaryawan'])->middleware('admin');
+Route::get('/pegawai/edit-password/{id}', [KaryawanController::class, 'editPassword'])->middleware('admin');
+Route::put('/pegawai/edit-password-proses/{id}', [KaryawanController::class, 'editPasswordProses'])->middleware('admin');
 Route::resource('/shift', ShiftController::class)->middleware('admin');
 
-Route::get('/pegawai/shift/{id}', [karyawanController::class, 'shift'])->middleware('admin');
-Route::get('/pegawai/dinas-luar/{id}', [karyawanController::class, 'dinasLuar'])->middleware('admin');
+Route::get('/pegawai/shift/{id}', [KaryawanController::class, 'shift'])->middleware('admin');
+Route::get('/pegawai/dinas-luar/{id}', [KaryawanController::class, 'dinasLuar'])->middleware('admin');
 
-Route::post('/pegawai/shift/proses-tambah-shift', [karyawanController::class, 'prosesTambahShift'])->middleware('admin');
-Route::post('/pegawai/dinas-luar/proses-tambah-shift', [karyawanController::class, 'prosesTambahDinas'])->middleware('admin');
+Route::post('/pegawai/shift/proses-tambah-shift', [KaryawanController::class, 'prosesTambahShift'])->middleware('admin');
+Route::post('/pegawai/dinas-luar/proses-tambah-shift', [KaryawanController::class, 'prosesTambahDinas'])->middleware('admin');
 
-Route::delete('/pegawai/delete-shift/{id}', [karyawanController::class, 'deleteShift'])->middleware('admin');
-Route::delete('/pegawai/delete-dinas/{id}', [karyawanController::class, 'deleteDinas'])->middleware('admin');
+Route::delete('/pegawai/delete-shift/{id}', [KaryawanController::class, 'deleteShift'])->middleware('admin');
+Route::delete('/pegawai/delete-dinas/{id}', [KaryawanController::class, 'deleteDinas'])->middleware('admin');
 
-Route::get('/pegawai/edit-shift/{id}', [karyawanController::class, 'editShift'])->middleware('admin');
-Route::get('/pegawai/edit-dinas/{id}', [karyawanController::class, 'editDinas'])->middleware('admin');
+Route::get('/pegawai/edit-shift/{id}', [KaryawanController::class, 'editShift'])->middleware('admin');
+Route::get('/pegawai/edit-dinas/{id}', [KaryawanController::class, 'editDinas'])->middleware('admin');
 
-Route::put('/pegawai/proses-edit-shift/{id}', [karyawanController::class, 'prosesEditShift'])->middleware('auth');
-Route::put('/pegawai/proses-edit-dinas/{id}', [karyawanController::class, 'prosesEditDinas'])->middleware('auth');
+Route::put('/pegawai/proses-edit-shift/{id}', [KaryawanController::class, 'prosesEditShift'])->middleware('auth');
+Route::put('/pegawai/proses-edit-dinas/{id}', [KaryawanController::class, 'prosesEditDinas'])->middleware('auth');
 
 Route::get('/absen', [AbsenController::class, 'index'])->middleware('auth');
-Route::get('/dinas-luar', [DinasLuar::class, 'index'])->middleware('auth');
+Route::get('/dinas-luar', [DinasLuarController::class, 'index'])->middleware('auth');
 
 Route::get('/my-location', [AbsenController::class, 'myLocation'])->middleware('auth');
 
 Route::put('/absen/masuk/{id}', [AbsenController::class, 'absenMasuk'])->middleware('auth');
-Route::put('/dinas-luar/masuk/{id}', [DinasLuar::class, 'absenMasukDinas'])->middleware('auth');
+Route::put('/dinas-luar/masuk/{id}', [DinasLuarController::class, 'absenMasukDinas'])->middleware('auth');
 
 Route::put('/absen/pulang/{id}', [AbsenController::class, 'absenPulang'])->middleware('auth');
-Route::put('/dinas-luar/pulang/{id}', [DinasLuar::class, 'absenPulangDinas'])->middleware('auth');
+Route::put('/dinas-luar/pulang/{id}', [DinasLuarController::class, 'absenPulangDinas'])->middleware('auth');
 
 Route::get('/data-absen', [AbsenController::class, 'dataAbsen'])->middleware('admin');
-Route::get('/data-dinas-luar', [DinasLuar::class, 'dataAbsenDinas'])->middleware('admin');
+Route::get('/data-dinas-luar', [DinasLuarController::class, 'dataAbsenDinas'])->middleware('admin');
 
 Route::get('/data-absen/{id}/edit-masuk', [AbsenController::class, 'editMasuk'])->middleware('admin');
 Route::get('/maps/{lat}/{long}/{userid}', [AbsenController::class, 'maps'])->middleware('auth');
@@ -94,7 +94,7 @@ Route::put('/data-absen/{id}/proses-edit-pulang', [AbsenController::class, 'pros
 Route::delete('/data-absen/{id}/delete', [AbsenController::class, 'deleteAdmin'])->middleware('admin');
 
 Route::get('/my-absen', [AbsenController::class, 'myAbsen'])->middleware('auth');
-Route::get('/my-dinas-luar', [DinasLuar::class, 'myDinasLuar'])->middleware('auth');
+Route::get('/my-dinas-luar', [DinasLuarController::class, 'myDinasLuar'])->middleware('auth');
 
 Route::get('/lembur', [LemburController::class, 'index'])->middleware('auth');
 Route::post('/lembur/masuk', [LemburController::class, 'masuk'])->middleware('auth');
@@ -142,12 +142,12 @@ Route::delete('/request-location/delete/{id}', [LokasiController::class, 'delete
 Route::get('/reset-cuti', [KaryawanController::class, 'resetCuti'])->middleware('admin');
 Route::put('/reset-cuti/{id}', [KaryawanController::class, 'resetCutiProses'])->middleware('admin');
 
-Route::get('/jabatan', [jabatanController::class, 'index'])->middleware('admin');
-Route::get('/jabatan/create', [jabatanController::class, 'create'])->middleware('admin');
-Route::post('/jabatan/insert', [jabatanController::class, 'insert'])->middleware('admin');
-Route::get('/jabatan/edit/{id}', [jabatanController::class, 'edit'])->middleware('admin');
-Route::put('/jabatan/update/{id}', [jabatanController::class, 'update'])->middleware('admin');
-Route::delete('/jabatan/delete/{id}', [jabatanController::class, 'delete'])->middleware('admin');
+Route::get('/jabatan', [JabatanController::class, 'index'])->middleware('admin');
+Route::get('/jabatan/create', [JabatanController::class, 'create'])->middleware('admin');
+Route::post('/jabatan/insert', [JabatanController::class, 'insert'])->middleware('admin');
+Route::get('/jabatan/edit/{id}', [JabatanController::class, 'edit'])->middleware('admin');
+Route::put('/jabatan/update/{id}', [JabatanController::class, 'update'])->middleware('admin');
+Route::delete('/jabatan/delete/{id}', [JabatanController::class, 'delete'])->middleware('admin');
 
 Route::get('/golongan', [GolonganController::class, 'index'])->middleware('admin');
 Route::get('/golongan/tambah', [GolonganController::class, 'tambah'])->middleware('admin');
