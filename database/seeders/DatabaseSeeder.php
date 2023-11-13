@@ -52,7 +52,57 @@ class DatabaseSeeder extends Seeder
         DB::beginTransaction();
 
         try {
-            User::create([
+            
+            $kantorCabangA = Lokasi::create([
+                'nama_lokasi' => 'Kantor Cabang A',
+                'lat_kantor' => '-6.3707314',
+                'long_kantor' => '106.8138057',
+                'radius' => '200',
+                'status' => 'approved',
+                //'created_by' => 1
+            ]);
+            
+            $jabatanTekInf = Jabatan::create([
+                'nama_jabatan' => 'Teknologi Informasi'
+            ]);
+
+            $jabatanKeuAkun =  Jabatan::create([
+                'nama_jabatan' => 'Keuangan dan Akutansi'
+            ]);
+
+            $jabatanAdminUm = Jabatan::create([
+                'nama_jabatan' => 'Administrasi & Umum'
+            ]);
+
+            $jabatanHumSar = Jabatan::create([
+                'nama_jabatan' => 'Humas & Pemasaran'
+            ]);
+
+            $jabatanSekre = Jabatan::create([
+                'nama_jabatan' => 'Sekretariat'
+            ]);
+            
+            $jabatanDir = Jabatan::create([
+                'nama_jabatan' => 'Direktur'
+            ]);
+
+            $golonganDir = Golongan::create([
+                'name' => 'DIREKSI'
+            ]);
+
+            $golonganKabag = Golongan::create([
+                'name' => 'KABAG'
+            ]);
+
+            $golonganStaff = Golongan::create([
+                'name' => 'STAFF'
+            ]);
+
+            $golonganPelaksana = Golongan::create([
+                'name' => 'PELAKSANA'
+            ]);
+
+            $accountAdmin = User::create([
                 'name' => 'Admin',
                 'email' => 'admin@gmail.com',
                 'telepon' => '0987654321',
@@ -72,12 +122,12 @@ class DatabaseSeeder extends Seeder
                 'izin_telat' => '16',
                 'izin_pulang_cepat' => '9',
                 'is_admin' => 'admin',
-                'jabatan_id' => '1',
-                'golongan_id' => '1',
-                'lokasi_id' => '1'
+                'jabatan_id' => $jabatanTekInf->id,
+                'golongan_id' => $golonganDir->id,
+                'lokasi_id' => $kantorCabangA
             ]);
 
-            User::create([
+            $accountUser = User::create([
                 'name' => 'User',
                 'email' => 'user@gmail.com',
                 'telepon' => '123456789',
@@ -97,50 +147,11 @@ class DatabaseSeeder extends Seeder
                 'izin_telat' => '10',
                 'izin_pulang_cepat' => '10',
                 'is_admin' => 'user',
-                'jabatan_id' => '2',
-                'golongan_id' => '1',
-                'lokasi_id' => '1'
+                'jabatan_id' => $jabatanKeuAkun->id,
+                'golongan_id' => $golonganDir->id,
+                'lokasi_id' => $kantorCabangA
             ]);
 
-            Jabatan::create([
-                'nama_jabatan' => 'Teknologi Informasi'
-            ]);
-
-            Jabatan::create([
-                'nama_jabatan' => 'Keuangan dan Akutansi'
-            ]);
-
-            Jabatan::create([
-                'nama_jabatan' => 'Administrasi & Umum'
-            ]);
-
-            Jabatan::create([
-                'nama_jabatan' => 'Humas & Pemasaran'
-            ]);
-
-            Jabatan::create([
-                'nama_jabatan' => 'Sekretariat'
-            ]);
-            
-            Jabatan::create([
-                'nama_jabatan' => 'Direktur'
-            ]);
-
-            Golongan::create([
-                'name' => 'DIREKSI'
-            ]);
-
-            Golongan::create([
-                'name' => 'KABAG'
-            ]);
-
-            Golongan::create([
-                'name' => 'STAFF'
-            ]);
-
-            Golongan::create([
-                'name' => 'PELAKSANA'
-            ]);
         
 
             Shift::create([
@@ -167,14 +178,6 @@ class DatabaseSeeder extends Seeder
                 'jam_keluar' => "07:00",
             ]);
 
-            Lokasi::create([
-                'nama_lokasi' => 'Kantor Cabang A',
-                'lat_kantor' => '-6.3707314',
-                'long_kantor' => '106.8138057',
-                'radius' => '200',
-                'status' => 'approved',
-                //'created_by' => 1
-            ]);
 
             ResetCuti::create([
                 'izin_cuti' => '10',
@@ -206,26 +209,26 @@ class DatabaseSeeder extends Seeder
             ]);
 
             
-            StatusPtkp::create([
+            $statusPtkpTK0 = StatusPtkp::create([
                 'name' => 'TK/0',
                 'ptkp_2016' => '54000000',
                 'ptkp_2015' => '36000000',
                 'ptkp_2009_2012' => '15840000',
             ]);
-            StatusPtkp::create([
+            $statusPtkpTK1 = StatusPtkp::create([
                 'name' => 'TK/1',
                 'ptkp_2016' => '58500000',
                 'ptkp_2015' => '39000000',
                 'ptkp_2009_2012' => '17160000',
             ]);
             
-            StatusPtkp::create([
+            $statusPtkpTK2 = StatusPtkp::create([
                 'name' => 'TK/2',
                 'ptkp_2016' => '63000000',
                 'ptkp_2015' => '42000000',
                 'ptkp_2009_2012' => '18480000',
             ]);
-            StatusPtkp::create([
+            $statusPtkpTK3 = StatusPtkp::create([
                 'name' => 'TK/3',
                 'ptkp_2016' => '67500000',
                 'ptkp_2015' => '45000000',
@@ -233,8 +236,8 @@ class DatabaseSeeder extends Seeder
             ]);
 
             Payroll::create([
-                'user_id' => 1,
-                'status_id' => 1,
+                'user_id' => $accountAdmin->id,
+                'status_id' => $statusPtkpTK0->id,
                 'bulan' => '7',
                 'tahun' => '2023',
                 'gaji' => '2000000.00',
@@ -250,8 +253,8 @@ class DatabaseSeeder extends Seeder
             ]);
             
             Payroll::create([
-                'user_id' => 2,
-                'status_id' => 2,
+                'user_id' => $accountUser->id,
+                'status_id' =>  $statusPtkpTK1->id,
                 'bulan' => '7',
                 'tahun' => '2023',
                 'gaji' => '4000000.00',
