@@ -6,6 +6,8 @@ use App\Models\Golongan;
 use App\Models\Jabatan;
 use App\Models\Tunjangan;
 use Illuminate\Http\Request;
+use Illuminate\Database\QueryException;
+use DB;
 
 class TunjanganController extends Controller
 {

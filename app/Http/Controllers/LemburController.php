@@ -8,6 +8,8 @@ use App\Models\Lokasi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use RealRashid\SweetAlert\Facades\Alert;
+use Illuminate\Database\QueryException;
+use DB;
 
 class LemburController extends Controller
 {

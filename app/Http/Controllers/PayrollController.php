@@ -7,6 +7,8 @@ use App\Models\Payroll;
 use App\Models\StatusPtkp;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Database\QueryException;
+use DB;
 
 class PayrollController extends Controller
 {

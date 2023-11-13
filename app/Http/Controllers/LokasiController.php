@@ -6,6 +6,8 @@ use App\Models\User;
 use App\Models\Lokasi;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
+use Illuminate\Database\QueryException;
+use DB;
 
 class LokasiController extends Controller
 {

@@ -5,10 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\DinasLuar;
 use App\Models\Shift;
 use App\Models\MappingShift;
-
-
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
+use Illuminate\Database\QueryException;
+use DB;
 
 class ShiftController extends Controller
 {

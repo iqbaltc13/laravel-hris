@@ -6,8 +6,10 @@ use App\Models\User;
 use App\Models\Jabatan;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
+use Illuminate\Database\QueryException;
+use DB;
 
-class jabatanController extends Controller
+class JabatanController extends Controller
 {
     public function index()
     {

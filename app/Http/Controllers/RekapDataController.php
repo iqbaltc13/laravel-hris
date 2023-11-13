@@ -8,6 +8,8 @@ use App\Models\User;
 use App\Models\MappingShift;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
+use Illuminate\Database\QueryException;
+use DB;
 
 class RekapDataController extends Controller
 {

@@ -6,6 +6,8 @@ use App\Models\AutoShift;
 use App\Models\Jabatan;
 use App\Models\Shift;
 use Illuminate\Http\Request;
+use Illuminate\Database\QueryException;
+use DB;
 
 class AutoShiftController extends Controller
 {

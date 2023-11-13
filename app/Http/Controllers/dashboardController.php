@@ -7,8 +7,10 @@ use Illuminate\Http\Request;
 use App\Models\Cuti;
 use App\Models\Lembur;
 use App\Models\ResetCuti;
+use Illuminate\Database\QueryException;
+use DB;
 
-class dashboardController extends Controller
+class DashboardController extends Controller
 {
     public function index()
     {

@@ -19,9 +19,11 @@ use App\Imports\UsersImport;
 use App\Models\Golongan;
 use App\Models\Payroll;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Database\QueryException;
+use DB;
 
 
-class karyawanController extends Controller
+class KaryawanController extends Controller
 {
     public function index(Request $request)
     {

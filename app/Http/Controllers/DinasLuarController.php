@@ -6,8 +6,10 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\DinasLuar as ModelsDinasLuar;
+use Illuminate\Database\QueryException;
+use DB;
 
-class DinasLuar extends Controller
+class DinasLuarController extends Controller
 {
     public function index()
     {

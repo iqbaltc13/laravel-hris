@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\StatusPtkp;
 use Illuminate\Http\Request;
+use Illuminate\Database\QueryException;
+use DB;
 
 class StatusPtkpController extends Controller
 {

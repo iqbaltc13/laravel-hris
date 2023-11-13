@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Payroll;
 use Illuminate\Http\Request;
+use Illuminate\Database\QueryException;
+use DB;
 
 class PajakController extends Controller
 {
