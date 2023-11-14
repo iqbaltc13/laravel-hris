@@ -78,15 +78,27 @@ class AuthController extends Controller
                     }
                 
                     Storage::put($fileName, $image_base64);
-                    $ms->update([
-                        'jam_absen' => $jam_absen,
-                        'telat' => $telat,
-                        'foto_jam_absen' => $fileName,
-                        'lat_absen' => $user->Lokasi->lat_kantor,
-                        'long_absen' => $user->Lokasi->long_kantor,
-                        'jarak_masuk' => '0',
-                        'status_absen' => $status_absen
-                    ]);
+                    DB::beginTransaction();
+                    try {
+                         $ms->update([
+                            'jam_absen' => $jam_absen,
+                            'telat' => $telat,
+                            'foto_jam_absen' => $fileName,
+                            'lat_absen' => $user->Lokasi->lat_kantor,
+                            'long_absen' => $user->Lokasi->long_kantor,
+                            'jarak_masuk' => '0',
+                            'status_absen' => $status_absen
+                        ]);
+                        DB::commit();
+
+                                // all good
+                    } catch (QueryException $e) {
+                    
+                        DB::rollback();
+                        return response()->json('gagal masuk');
+                        // something went wrong
+                    }
+                   
                     return response()->json('masuk');
                 } else {
                     return response()->json('selesai');
@@ -139,14 +151,26 @@ class AuthController extends Controller
                     }
                 
                     Storage::put($fileName, $image_base64);
-                    $ms->update([
-                        'jam_pulang' => $jam_pulang,
-                        'pulang_cepat' => $pulang_cepat,
-                        'foto_jam_pulang' => $fileName,
-                        'lat_pulang' => $user->Lokasi->lat_kantor,
-                        'long_pulang' => $user->Lokasi->long_kantor,
-                        'jarak_pulang' => '0',
-                    ]);
+                    DB::beginTransaction();
+                    try {
+                        $ms->update([
+                            'jam_pulang' => $jam_pulang,
+                            'pulang_cepat' => $pulang_cepat,
+                            'foto_jam_pulang' => $fileName,
+                            'lat_pulang' => $user->Lokasi->lat_kantor,
+                            'long_pulang' => $user->Lokasi->long_kantor,
+                            'jarak_pulang' => '0',
+                        ]);
+                        DB::commit();
+
+                    // all good
+                    } catch (QueryException $e) {
+                    
+                        DB::rollback();
+                        return response()->json('gagal pulang');
+                        // something went wrong
+                    }
+                    
                     return response()->json('pulang');
                 } else {
                     return response()->json('selesai');
@@ -200,7 +224,19 @@ class AuthController extends Controller
         }
 
         $validatedData['password'] = Hash::make($validatedData['password']);
-        User::create($validatedData);
+        DB::beginTransaction();
+        try {
+            User::create($validatedData);
+            DB::commit();
+
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'Gagal Register!']);
+            // something went wrong
+        }
+       
         return redirect('/')->with('success', 'Berhasil Register! Silahkan Login');
     }
 

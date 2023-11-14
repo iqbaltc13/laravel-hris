@@ -51,8 +51,20 @@ class ShiftController extends Controller
             'jam_keluar' => 'required'
         ]);
 
-        Shift::create($validatedData);
-        return redirect('/shift')->with('success', 'Data Berhasil di Tambahkan');
+        
+        DB::beginTransaction();
+        try {
+            Shift::create($validatedData);
+            DB::commit();
+
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'Data Gagal ditambahkan ']);
+            // something went wrong
+        }
+        return redirect('/shift')->with('success', 'Data Berhasil ditambahkan');
     }
 
     /**
@@ -95,8 +107,20 @@ class ShiftController extends Controller
             'jam_keluar' => 'required'
         ]);
 
-        Shift::where('id', $id)->update($validatedData);
-        return redirect('/shift')->with('success', 'Data Berhasil di Update');
+        
+        DB::beginTransaction();
+        try {
+            Shift::where('id', $id)->update($validatedData);
+            DB::commit();
+
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'Data Gagal diupdate ']);
+            // something went wrong
+        }
+        return redirect('/shift')->with('success', 'Data Berhasil diupdate');
     }
 
     /**
@@ -114,8 +138,20 @@ class ShiftController extends Controller
             return back();
         } else {
             $delete = Shift::find($id);
-            $delete->delete();
+            DB::beginTransaction();
+            try {
+                $delete->delete();
+                DB::commit();
+
+                // all good
+            } catch (QueryException $e) {
+            
+                DB::rollback();
+                return back()->withErrors(['msg' => 'Data Gagal didelete ']);
+                // something went wrong
+            }
+            
         }
-        return redirect('/shift')->with('success', 'Data Berhasil di Delete');
+        return redirect('/shift')->with('success', 'Data Berhasil didelete');
     }
 }

@@ -35,7 +35,19 @@ class AutoShiftController extends Controller
             "shift_id" => 'required',
         ]);
 
-        AutoShift::create($validatedData);
+        DB::beginTransaction();
+        try {
+            AutoShift::create($validatedData);
+            DB::commit();
+
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'Data Gagal Ditambahkan']);
+            // something went wrong
+        }
+        
         return redirect('/auto-shift')->with('success', 'Data Berhasil Ditambahkan');
     }
 
@@ -55,15 +67,38 @@ class AutoShiftController extends Controller
             "jabatan_id" => 'required',
             "shift_id" => 'required',
         ]);
+        DB::beginTransaction();
+        try {
+            AutoShift::where('id', $id)->update($validatedData);
+            DB::commit();
 
-        AutoShift::where('id', $id)->update($validatedData);
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'Data Gagal Diupdate ']);
+            // something went wrong
+        }
+        
         return redirect('/auto-shift')->with('success', 'Data Berhasil Diupdate');
     }
 
     public function delete($id)
     {
-        $delete = AutoShift::find($id);
-        $delete->delete();
+       
+        DB::beginTransaction();
+        try {
+            $delete = AutoShift::find($id);
+            DB::commit();
+
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'Gagal ']);
+            // something went wrong
+        }
+        
         return redirect('/auto-shift')->with('success', 'Data Berhasil di Delete');
     }
 }

@@ -59,8 +59,20 @@ class LokasiController extends Controller
             'status' => 'required',
             'created_by' => 'required'
         ]);
-        Lokasi::create($validatedData);
-        return redirect('/lokasi-kantor')->with('success', 'Lokasi Berhasil Di Tambahkan');
+        
+        DB::beginTransaction();
+        try {
+            Lokasi::create($validatedData);
+            DB::commit();
+
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'Lokasi Gagal ditambahkan ']);
+            // something went wrong
+        }
+        return redirect('/lokasi-kantor')->with('success', 'Lokasi Berhasil ditambahkan');
     }
     
     public function prosesTambahRequestLocation(Request $request)
@@ -73,8 +85,20 @@ class LokasiController extends Controller
             'status' => 'required',
             'created_by' => 'required'
         ]);
-        Lokasi::create($validatedData);
-        return redirect('/request-location')->with('success', 'Lokasi Berhasil Di Tambahkan');
+        
+        DB::beginTransaction();
+        try {
+            Lokasi::create($validatedData);
+            DB::commit();
+
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'Lokasi Gagal ditambahkan']);
+            // something went wrong
+        }
+        return redirect('/request-location')->with('success', 'Lokasi Berhasil ditambahkan');
     }
 
     public function editLokasi($id)
@@ -98,16 +122,28 @@ class LokasiController extends Controller
         $validatedData = $request->validate([
             'status' => 'required'
         ]);
+        DB::beginTransaction();
+        try {
+            Lokasi::where('id', $id)->update($validatedData);
+            if($validatedData["status"] == 'approved'){
+                $lokasi = Lokasi::findOrFail($id);
+                $user_id = $lokasi->created_by;
+                User::where('id', $user_id)->update(['lokasi_id' => $lokasi->id]);
+                return redirect('/lokasi-kantor/pending-location')->with('success', 'Lokasi Berhasil diapprove');    
+            } else {
+                return redirect('/lokasi-kantor/pending-location')->with('success', 'Lokasi Berhasil direject');    
+            }
+            DB::commit();
 
-        Lokasi::where('id', $id)->update($validatedData);
-        if($validatedData["status"] == 'approved'){
-            $lokasi = Lokasi::findOrFail($id);
-            $user_id = $lokasi->created_by;
-            User::where('id', $user_id)->update(['lokasi_id' => $lokasi->id]);
-            return redirect('/lokasi-kantor/pending-location')->with('success', 'Lokasi Berhasil Di Approve');    
-        } else {
-            return redirect('/lokasi-kantor/pending-location')->with('success', 'Lokasi Berhasil Di Reject');    
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'Lokasi Gagal di Reject/Approve ']);
+            // something went wrong
         }
+        
+        
     }
 
     public function updateLokasi(Request $request, $id)
@@ -117,9 +153,20 @@ class LokasiController extends Controller
             'lat_kantor' => 'required',
             'long_kantor' => 'required'
         ]);
+        DB::beginTransaction();
+        try {
+            Lokasi::where('id', $id)->update($validatedData);
+            DB::commit();
 
-        Lokasi::where('id', $id)->update($validatedData);
-        return redirect('/lokasi-kantor')->with('success', 'Lokasi Berhasil Diupdate');    
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'Lokasi Gagal diupdate ']);
+            // something went wrong
+        }
+        
+        return redirect('/lokasi-kantor')->with('success', 'Lokasi Berhasil diupdate');    
     }
 
     public function updateRequestLocation(Request $request, $id)
@@ -130,9 +177,20 @@ class LokasiController extends Controller
             'long_kantor' => 'required',
             'status' => 'required'
         ]);
+        DB::beginTransaction();
+        try {
+            Lokasi::where('id', $id)->update($validatedData);
+            DB::commit();
 
-        Lokasi::where('id', $id)->update($validatedData);
-        return redirect('/request-location')->with('success', 'Lokasi Berhasil Diupdate');    
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'Lokasi Gagal diupdate ']);
+            // something went wrong
+        }
+        
+        return redirect('/request-location')->with('success', 'Lokasi Berhasil diupdate');    
     }
 
     public function updateRadiusLokasi(Request $request, $id)
@@ -140,9 +198,20 @@ class LokasiController extends Controller
         $validatedData = $request->validate([
             'radius' => 'required',
         ]);
+        DB::beginTransaction();
+        try {
+            Lokasi::where('id', $id)->update($validatedData);
+            DB::commit();
 
-        Lokasi::where('id', $id)->update($validatedData);
-        return redirect('/lokasi-kantor')->with('success', 'Lokasi Berhasil Diupdate');
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'Lokasi Gagal diupdate ']);
+            // something went wrong
+        }
+        
+        return redirect('/lokasi-kantor')->with('success', 'Lokasi Berhasil diupdate');
     }
 
     public function updateRadiusRequestLocation(Request $request, $id)
@@ -151,9 +220,20 @@ class LokasiController extends Controller
             'radius' => 'required',
             'status' => 'required'
         ]);
+        DB::beginTransaction();
+        try {
+            Lokasi::where('id', $id)->update($validatedData);
+            DB::commit();
 
-        Lokasi::where('id', $id)->update($validatedData);
-        return redirect('/request-location')->with('success', 'Lokasi Berhasil Diupdate');
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'Lokasi Gagal diupdate ']);
+            // something went wrong
+        }
+        
+        return redirect('/request-location')->with('success', 'Lokasi Berhasil diupdate');
     }
 
     public function deleteLokasi($id)
@@ -163,10 +243,23 @@ class LokasiController extends Controller
             Alert::error('Failed', 'Masih Ada User Yang Menggunakan Lokasi Ini!');
             return back();
         } else {
+            
             $lokasi = Lokasi::findOrFail($id);
-            $lokasi->delete();
+            DB::beginTransaction();
+            try {
+                $lokasi->delete();
+                DB::commit();
+
+                // all good
+            } catch (QueryException $e) {
+            
+                DB::rollback();
+                return back()->withErrors(['msg' => 'Lokasi Gagal didelete ']);
+                // something went wrong
+            }
+            
         }
-        return redirect('/lokasi-kantor')->with('success', 'Lokasi Berhasil Di Delete');
+        return redirect('/lokasi-kantor')->with('success', 'Lokasi Berhasil didelete');
     }
 
     public function deleteRequestLocation($id)
@@ -177,8 +270,19 @@ class LokasiController extends Controller
             Alert::error('Failed', 'Masih Ada User Yang Menggunakan Lokasi Ini!');
             return redirect('/request-location');
         } else {
+            DB::beginTransaction();
+            try {
+                DB::commit();
+
+                // all good
+            } catch (QueryException $e) {
+            
+                DB::rollback();
+                return back()->withErrors(['msg' => 'Lokasi Gagal didelete']);
+                // something went wrong
+            }
             $lokasi->delete();
-            return redirect('/request-location')->with('success', 'Lokasi Berhasil Di Delete');
+            return redirect('/request-location')->with('success', 'Lokasi Berhasil didelete');
         }
     }
 }

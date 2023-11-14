@@ -84,8 +84,19 @@ class DinasLuarController extends Controller
                 'foto_jam_absen' => 'required',
                 'status_absen' => 'required'
             ]);
-    
-            ModelsDinasLuar::where('id', $id)->update($validatedData);
+            DB::beginTransaction();
+            try {
+                ModelsDinasLuar::where('id', $id)->update($validatedData);
+                DB::commit();
+                 
+                // all good
+            } catch (QueryException $e) {
+            
+                DB::rollback();
+                return back()->withErrors(['msg' => 'Gagal Absen Masuk']);
+                // something went wrong
+            }
+           
     
             $request->session()->flash('success', 'Berhasil Absen Masuk');
     
@@ -145,7 +156,19 @@ class DinasLuarController extends Controller
                 'pulang_cepat' => 'required',
             ]);
     
-            ModelsDinasLuar::where('id', $id)->update($validatedData);
+            
+            DB::beginTransaction();
+            try {
+                ModelsDinasLuar::where('id', $id)->update($validatedData);
+                DB::commit();
+
+                // all good
+            } catch (QueryException $e) {
+            
+                DB::rollback();
+                return back()->withErrors(['msg' => 'GagalAbsen Pulang ']);
+                // something went wrong
+            }
     
             return redirect('/dinas-luar')->with('success', 'Berhasil Absen Pulang');
     }

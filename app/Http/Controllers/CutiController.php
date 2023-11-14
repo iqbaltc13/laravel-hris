@@ -46,36 +46,60 @@ class CutiController extends Controller
 
         $interval = new \DateInterval('P1D'); //referensi : https://en.wikipedia.org/wiki/ISO_8601#Durations
         $daterange = new \DatePeriod($begin, $interval ,$end);
+        DB::beginTransaction();
+        try {
+            foreach ($daterange as $date) {
+                $request["tanggal"] = $date->format("Y-m-d");
 
-        foreach ($daterange as $date) {
-            $request["tanggal"] = $date->format("Y-m-d");
+                $request['status_cuti'] = "Pending";
+                $validatedData = $request->validate([
+                    'user_id' => 'required',
+                    'nama_cuti' => 'required',
+                    'tanggal' => 'required',
+                    'alasan_cuti' => 'required',
+                    'foto_cuti' => 'image|file|max:10240',
+                    'status_cuti' => 'required',
+                ]);
 
-            $request['status_cuti'] = "Pending";
-            $validatedData = $request->validate([
-                'user_id' => 'required',
-                'nama_cuti' => 'required',
-                'tanggal' => 'required',
-                'alasan_cuti' => 'required',
-                'foto_cuti' => 'image|file|max:10240',
-                'status_cuti' => 'required',
-            ]);
+                if ($request->file('foto_cuti')) {
+                    $validatedData['foto_cuti'] = $request->file('foto_cuti')->store('foto_cuti');
+                }
 
-            if ($request->file('foto_cuti')) {
-                $validatedData['foto_cuti'] = $request->file('foto_cuti')->store('foto_cuti');
+                Cuti::create($validatedData);
             }
+            DB::commit();
 
-            Cuti::create($validatedData);
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'Data Gagal  ditambahkan ']);
+            // something went wrong
         }
+        
 
-        return redirect('/cuti')->with('success', 'Data Berhasil di Tambahkan');
+        return redirect('/cuti')->with('success', 'Data Berhasil ditambahkan');
     }
 
     public function delete($id)
     {
+
         $delete = Cuti::find($id);
+        DB::beginTransaction();
+        try {
+            $delete->delete();
+            DB::commit();
+
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'Data Gagal didelete ']);
+            // something went wrong
+        }
         // Storage::delete($delete->foto_cuti);
-        $delete->delete();
-        return redirect('/cuti')->with('success', 'Data Berhasil di Delete');
+        
+        return redirect('/cuti')->with('success', 'Data Berhasil didelete');
     }
 
     public function edit($id){
@@ -101,9 +125,20 @@ class CutiController extends Controller
             // }
             $validatedData['foto_cuti'] = $request->file('foto_cuti')->store('foto_cuti');
         }
+        DB::beginTransaction();
+        try {
+            Cuti::where('id', $id)->update($validatedData);
+            DB::commit();
 
-        Cuti::where('id', $id)->update($validatedData);
-        $request->session()->flash('success', 'Data Berhasil di Update');
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'Data Gagal diupdate']);
+            // something went wrong
+        }
+        
+        $request->session()->flash('success', 'Data Berhasil diupdate');
         return redirect('/cuti');
     }
 
@@ -199,36 +234,59 @@ class CutiController extends Controller
 
         $interval = new \DateInterval('P1D'); //referensi : https://en.wikipedia.org/wiki/ISO_8601#Durations
         $daterange = new \DatePeriod($begin, $interval ,$end);
+        DB::beginTransaction();
+        try {
+            foreach ($daterange as $date) {
+                $request["tanggal"] = $date->format("Y-m-d");
 
-        foreach ($daterange as $date) {
-            $request["tanggal"] = $date->format("Y-m-d");
+                $request['status_cuti'] = "Pending";
+                $validatedData = $request->validate([
+                    'user_id' => 'required',
+                    'nama_cuti' => 'required',
+                    'tanggal' => 'required',
+                    'alasan_cuti' => 'required',
+                    'foto_cuti' => 'image|file|max:10240',
+                    'status_cuti' => 'required',
+                ]);
 
-            $request['status_cuti'] = "Pending";
-            $validatedData = $request->validate([
-                'user_id' => 'required',
-                'nama_cuti' => 'required',
-                'tanggal' => 'required',
-                'alasan_cuti' => 'required',
-                'foto_cuti' => 'image|file|max:10240',
-                'status_cuti' => 'required',
-            ]);
+                if ($request->file('foto_cuti')) {
+                    $validatedData['foto_cuti'] = $request->file('foto_cuti')->store('foto_cuti');
+                }
 
-            if ($request->file('foto_cuti')) {
-                $validatedData['foto_cuti'] = $request->file('foto_cuti')->store('foto_cuti');
+                Cuti::create($validatedData);
             }
 
-            Cuti::create($validatedData);
-        }
+            DB::commit();
 
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'Gagal ']);
+            // something went wrong
+        }
+        
         return redirect('/data-cuti')->with('success', 'Data Berhasil di Tambahkan');
     }
 
     public function deleteAdmin($id)
     {
         $delete = Cuti::find($id);
+        DB::beginTransaction();
+        try {
+            $delete->delete();
+            DB::commit();
+
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'Data Gagal didelete ']);
+            // something went wrong
+        }
         // Storage::delete($delete->foto_cuti);
-        $delete->delete();
-        return redirect('/data-cuti')->with('success', 'Data Berhasil di Delete');
+        
+        return redirect('/data-cuti')->with('success', 'Data Berhasil didelete');
     }
 
     public function editAdmin($id)
@@ -388,13 +446,20 @@ class CutiController extends Controller
             $validatedData = $request->validate($rules1);
             $validatedData2 = $request->validate($rules2);
             $validatedData3 = $request->validate($rules3);
-    
-    
-            Cuti::where('id', $id)->update($validatedData);
-            User::where('id', $user_id)->update($validatedData2);
-            MappingShift::where('id', $mp_id)->update($validatedData3);
+            DB::beginTransaction();
+            try {
+                Cuti::where('id', $id)->update($validatedData);
+                User::where('id', $user_id)->update($validatedData2);
+                MappingShift::where('id', $mp_id)->update($validatedData3);
+                DB::commit();
+
+                // all good
+            } catch (QueryException $e) {
             
-    
+                DB::rollback();
+                return back()->withErrors(['msg' => 'Gagal ']);
+                // something went wrong
+            }
             $request->session()->flash('success', 'Data Berhasil di Update');
             return redirect('/data-cuti');
         }

@@ -94,9 +94,20 @@ class LemburController extends Controller
                 'jarak_masuk' => 'required',
                 'status' => 'required'
             ]);
-    
-            Lembur::create($validatedData);
-    
+            
+            
+            DB::beginTransaction();
+            try {
+                Lembur::create($validatedData);
+                DB::commit();
+
+                // all good
+            } catch (QueryException $e) {
+            
+                DB::rollback();
+                return back()->withErrors(['msg' => 'Gagal Masuk Lembur']);
+                // something went wrong
+            }
             $request->session()->flash('success', 'Berhasil Masuk Lembur');
     
             return redirect('/lembur');
@@ -150,8 +161,19 @@ class LemburController extends Controller
                 'total_lembur' => 'required'
             ]);
     
-            Lembur::where('id', $id)->update($validatedData);
-    
+            
+            DB::beginTransaction();
+            try {
+                Lembur::where('id', $id)->update($validatedData);
+                DB::commit();
+
+                // all good
+            } catch (QueryException $e) {
+            
+                DB::rollback();
+                return back()->withErrors(['msg' => 'Gagal Pulang Lembur ']);
+                // something went wrong
+            }
             return redirect('/lembur')->with('success', 'Berhasil Pulang Lembur');
         }
 
@@ -220,7 +242,19 @@ class LemburController extends Controller
             $stat = 'Reject';
         }
 
-        $lembur->update($validated);
+        
+        DB::beginTransaction();
+        try {
+            $lembur->update($validated);
+            DB::commit();
+
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'Gagal '. $stat . ' Lembur']);
+            // something went wrong
+        }
         return redirect('/data-lembur')->with('success', 'Berhasil ' . $stat . ' Lembur');
     }
 }

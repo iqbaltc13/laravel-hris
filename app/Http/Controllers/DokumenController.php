@@ -41,8 +41,19 @@ class DokumenController extends Controller
         if ($request->file('file')) {
             $validatedData['file'] = $request->file('file')->store('file');
         }
+        DB::beginTransaction();
+        try {
+            Sip::create($validatedData);
+            DB::commit();
 
-        Sip::create($validatedData);
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'Dokumen Gagal Ditambahkan']);
+            // something went wrong
+        }
+        
         return redirect('/dokumen')->with('success', 'Dokumen Berhasil Ditambahkan');
     }
 
@@ -69,15 +80,38 @@ class DokumenController extends Controller
             }
             $validatedData['file'] = $request->file('file')->store('file');
         }
+        DB::beginTransaction();
+        try {
+            Sip::where('id', $id)->update($validatedData);
+            DB::commit();
 
-        Sip::where('id', $id)->update($validatedData);
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'Dokumen Gagal Diupdate ']);
+            // something went wrong
+        }
+        
         return redirect('/dokumen')->with('success', 'Dokumen Berhasil Diupdate');
     }
     
     public function delete($id)
     {
         $dokumen = Sip::findOrFail($id);
-        $dokumen->delete();
+        DB::beginTransaction();
+        try {
+            $dokumen->delete();
+            DB::commit();
+
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'Dokumen Gagal Didelete ']);
+            // something went wrong
+        }
+        
         Storage::delete($dokumen->file);
         return redirect('/dokumen')->with('success', 'Dokumen Berhasil Didelete');
     }
@@ -109,8 +143,19 @@ class DokumenController extends Controller
         if ($request->file('file')) {
             $validatedData['file'] = $request->file('file')->store('file');
         }
+        DB::beginTransaction();
+        try {
+            Sip::create($validatedData);
+            DB::commit();
 
-        Sip::create($validatedData);
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'Dokumen Gagal Ditambahakan ']);
+            // something went wrong
+        }
+       
         return redirect('/my-dokumen')->with('success', 'Dokumen Berhasil Ditambahkan');
     }
 
@@ -130,19 +175,43 @@ class DokumenController extends Controller
 
         if ($request->file('file')) {
             if ($request->file_lama) {
+                DB::beginTransaction();
+                try {
+                    Sip::where('id', $id)->update($validatedData);
+                    DB::commit();
+
+                    // all good
+                } catch (QueryException $e) {
+                
+                    DB::rollback();
+                    return back()->withErrors(['msg' => 'Dokumen Gagal Diupdate ']);
+                    // something went wrong
+                }
                 Storage::delete($request->file_lama);
             }
             $validatedData['file'] = $request->file('file')->store('file');
         }
 
-        Sip::where('id', $id)->update($validatedData);
+        
         return redirect('/my-dokumen')->with('success', 'Dokumen Berhasil Diupdate');
     }
 
     public function myDokumenDelete($id)
     {
         $dokumen = Sip::findOrFail($id);
-        $dokumen->delete();
+        DB::beginTransaction();
+        try {
+            $dokumen->delete();
+            DB::commit();
+
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'Dokumen Gagal Didelete ']);
+            // something went wrong
+        }
+        
         Storage::delete($dokumen->file);
         return redirect('/my-dokumen')->with('success', 'Dokumen Berhasil Didelete');
     }

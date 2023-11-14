@@ -31,9 +31,20 @@ class GolonganController extends Controller
         $validatedData = $request->validate([
             'name' => 'required|max:255',
         ]);
+        DB::beginTransaction();
+        try {
+            Golongan::create($validatedData);
+            DB::commit();
 
-        Golongan::create($validatedData);
-        return redirect('/golongan')->with('success', 'Data Berhasil di Tambahkan');
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'Data Gagal ditambahkan ']);
+            // something went wrong
+        }
+        
+        return redirect('/golongan')->with('success', 'Data Berhasil ditambahkan');
     }
 
     public function edit($id)
@@ -49,9 +60,20 @@ class GolonganController extends Controller
         $validatedData = $request->validate([
             'name' => 'required|max:255',
         ]);
+        DB::beginTransaction();
+        try {
+            Golongan::where('id', $id)->update($validatedData);
+            DB::commit();
 
-        Golongan::where('id', $id)->update($validatedData);
-        return redirect('/golongan')->with('success', 'Data Berhasil di Update');
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'Data Gagal ']);
+            // something went wrong
+        }
+        
+        return redirect('/golongan')->with('success', 'Data Berhasil diupdate');
     }
 
     public function delete($id)

@@ -31,9 +31,20 @@ class JabatanController extends Controller
         $validatedData = $request->validate([
             'nama_jabatan' => 'required|max:255',
         ]);
+        DB::beginTransaction();
+        try {
+            Jabatan::create($validatedData);
+            DB::commit();
 
-        Jabatan::create($validatedData);
-        return redirect('/jabatan')->with('success', 'Data Berhasil di Tambahkan');
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'Data Gagal ditambahkan ']);
+            // something went wrong
+        }
+        
+        return redirect('/jabatan')->with('success', 'Data Berhasil ditambahkan');
     }
 
     public function edit($id)
@@ -49,8 +60,19 @@ class JabatanController extends Controller
         $validatedData = $request->validate([
             'nama_jabatan' => 'required|max:255',
         ]);
+        DB::beginTransaction();
+        try {
+            Jabatan::where('id', $id)->update($validatedData);
+            DB::commit();
 
-        Jabatan::where('id', $id)->update($validatedData);
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'Gagal ']);
+            // something went wrong
+        }
+        
         return redirect('/jabatan')->with('success', 'Data Berhasil di Update');
     }
 

@@ -434,7 +434,7 @@ class AbsenController extends Controller
                 return back()->withErrors(['msg' => 'Gagal Delete Data']);
                 // something went wrong
         }
-        $delete->delete();
+       
         return redirect('/data-absen')->with('success', 'Data Berhasil di Delete');
     }
 

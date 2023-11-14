@@ -52,8 +52,20 @@ class StatusPtkpController extends Controller
         $validated['ptkp_2015'] = str_replace(',', '', $validated['ptkp_2015']);
         $validated['ptkp_2009_2012'] = str_replace(',', '', $validated['ptkp_2009_2012']);
 
-        StatusPtkp::create($validated);
-        return redirect('/status-ptkp')->with('success', 'Data Berhasil Ditambahkan');
+        
+        DB::beginTransaction();
+        try {
+            StatusPtkp::create($validated);
+            DB::commit();
+
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'Data Gagal ditambahkan ']);
+            // something went wrong
+        }
+        return redirect('/status-ptkp')->with('success', 'Data Berhasil ditambahkan');
     }
 
     public function edit($id)
@@ -85,14 +97,38 @@ class StatusPtkpController extends Controller
         $validated['ptkp_2015'] = str_replace(',', '', $validated['ptkp_2015']);
         $validated['ptkp_2009_2012'] = str_replace(',', '', $validated['ptkp_2009_2012']);
 
-        StatusPtkp::where('id', $id)->update($validated);
-        return redirect('/status-ptkp')->with('success', 'Data Berhasil Diupdate');
+        
+        DB::beginTransaction();
+        try {
+            StatusPtkp::where('id', $id)->update($validated);
+            DB::commit();
+
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'Data Gagal diupdate ']);
+            // something went wrong
+        }
+        return redirect('/status-ptkp')->with('success', 'Data Berhasil diupdate');
     }
 
     public function delete($id)
     {
-        StatusPtkp::where('id', $id)->delete();
-        return redirect('/status-ptkp')->with('success', 'Data Berhasil Dihapus');
+        
+        DB::beginTransaction();
+        try {
+            StatusPtkp::where('id', $id)->delete();
+            DB::commit();
+
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'Data Gagal dihapus ']);
+            // something went wrong
+        }
+        return redirect('/status-ptkp')->with('success', 'Data Berhasil dihapus');
     }
 
 }

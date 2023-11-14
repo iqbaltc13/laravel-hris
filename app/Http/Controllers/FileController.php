@@ -39,8 +39,20 @@ class FileController extends Controller
             $validatedData['fileUpload'] = $request->file('fileUpload')->store('fileUpload');
         }
 
-        File::create($validatedData);
-        return redirect('/file')->with('success', 'File Berhasil Di Upload');
+        
+        DB::beginTransaction();
+        try {
+            File::create($validatedData);
+            DB::commit();
+
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'File Gagal diupload ']);
+            // something went wrong
+        }
+        return redirect('/file')->with('success', 'File Berhasil Diupload');
     }
 
     public function edit($id)
@@ -66,15 +78,38 @@ class FileController extends Controller
             }
             $validatedData['fileUpload'] = $request->file('fileUpload')->store('fileUpload');
         }
-
-        File::where('id', $id)->update($validatedData);
+        DB::beginTransaction();
+        try {
+            File::where('id', $id)->update($validatedData);
+            DB::commit();
+            
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'File Gagal Diupdate ']);
+            // something went wrong
+        }
+        
         return redirect('/file')->with('success', 'File Berhasil Diupdate');
     }
     
     public function delete($id)
     {
         $file = File::findOrFail($id);
-        $file->delete();
+        DB::beginTransaction();
+        try {
+            $file->delete();
+            DB::commit();
+
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'File Gagal Didelete ']);
+            // something went wrong
+        }
+        
         Storage::delete($file->fileUpload);
         return redirect('/file')->with('success', 'File Berhasil Didelete');
     }
@@ -105,8 +140,19 @@ class FileController extends Controller
         if ($request->file('fileUpload')) {
             $validatedData['fileUpload'] = $request->file('fileUpload')->store('fileUpload');
         }
+        DB::beginTransaction();
+        try {
+            File::create($validatedData);
+            DB::commit();
 
-        File::create($validatedData);
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'File Gagal Diupload ']);
+            // something went wrong
+        }
+        
         return redirect('/my-file')->with('success', 'File Berhasil Di Upload');
     }
 
@@ -131,15 +177,38 @@ class FileController extends Controller
             }
             $validatedData['fileUpload'] = $request->file('fileUpload')->store('fileUpload');
         }
+        DB::beginTransaction();
+        try {
+            File::where('id', $id)->update($validatedData);
+            DB::commit();
 
-        File::where('id', $id)->update($validatedData);
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'File Gagal Diupdate']);
+            // something went wrong
+        }
+        
         return redirect('/my-file')->with('success', 'File Berhasil Diupdate');
     }
     
     public function myFileDelete($id)
     {
         $file = File::findOrFail($id);
-        $file->delete();
+        DB::beginTransaction();
+        try {
+            $file->delete();
+            DB::commit();
+
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'File Gagal Didelete ']);
+            // something went wrong
+        }
+        
         Storage::delete($file->fileUpload);
         return redirect('/my-file')->with('success', 'File Berhasil Didelete');
     }

@@ -37,8 +37,20 @@ class TunjanganController extends Controller
             'tunjangan_transport' => 'required',
         ]);
 
-        Tunjangan::create($validated);
-        return redirect('/tunjangan')->with('success', 'Data Berhasil Ditambahkan');
+        
+        DB::beginTransaction();
+        try {
+            Tunjangan::create($validated);
+            DB::commit();
+
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'Data Gagal ditambahkan ']);
+            // something went wrong
+        }   
+        return redirect('/tunjangan')->with('success', 'Data Berhasil ditambahkan');
     }
 
     public function edit($id)
@@ -60,13 +72,37 @@ class TunjanganController extends Controller
             'tunjangan_transport' => 'required',
         ]);
 
-        Tunjangan::where('id', $id)->update($validated);
-        return redirect('/tunjangan')->with('success', 'Data Berhasil Diupdate');
+        
+        DB::beginTransaction();
+        try {
+            Tunjangan::where('id', $id)->update($validated);
+            DB::commit();
+
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'Data Gagal diupdate']);
+            // something went wrong
+        }
+        return redirect('/tunjangan')->with('success', 'Data Berhasil diupdate');
     }
 
     public function delete($id)
     {
-        Tunjangan::where('id', $id)->delete();
-        return redirect('/tunjangan')->with('success', 'Data Berhasil Didelete');
+        
+        DB::beginTransaction();
+        try {
+            Tunjangan::where('id', $id)->delete();
+            DB::commit();
+
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'Data Gagal didelete ']);
+            // something went wrong
+        }
+        return redirect('/tunjangan')->with('success', 'Data Berhasil didelete');
     }
 }

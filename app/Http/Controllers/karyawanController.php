@@ -56,9 +56,20 @@ class KaryawanController extends Controller
         $file = $request->file('file_excel');
         $nama_file = $file->getClientOriginalName();
         $file->move('DataUser', $nama_file);
+        DB::beginTransaction();
+        try {
+            Excel::import(new UsersImport, public_path('/DataUser/'.$nama_file));    
+            DB::commit();
 
-        Excel::import(new UsersImport, public_path('/DataUser/'.$nama_file));
-        return back()->with('success', 'Data Berhasil Di Import');
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'Data Gagal diimport ']);
+            // something went wrong
+        }
+        
+        return back()->with('success', 'Data Berhasil Diimport');
     }
 
     public function tambahKaryawan()
@@ -153,8 +164,19 @@ class KaryawanController extends Controller
         }
 
         $validatedData['password'] = Hash::make($validatedData['password']);
-        User::create($validatedData);
-        return redirect('/pegawai')->with('success', 'Data Berhasil di Tambahkan');
+        
+        DB::beginTransaction();
+        try {
+            DB::commit();
+            User::create($validatedData);
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'Data Gagal ditambahkan ']);
+            // something went wrong
+        }
+        return redirect('/pegawai')->with('success', 'Data Berhasil ditambahkan');
     }
 
     public function detail($id)
@@ -263,22 +285,45 @@ class KaryawanController extends Controller
         }
 
 
-        User::where('id', $id)->update($validatedData);
-        $request->session()->flash('success', 'Data Berhasil di Update');
+        
+        DB::beginTransaction();
+        try {
+            DB::commit();
+            User::where('id', $id)->update($validatedData);
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'Data Gagal diupdate ']);
+            // something went wrong
+        }
+        $request->session()->flash('success', 'Data Berhasil diupdate');
         return redirect('/pegawai');
     }
 
     public function deleteKaryawan($id)
     {
         $delete = User::find($id);
-        MappingShift::where('user_id', $id)->delete();
-        Lembur::where('user_id', $id)->delete();
-        Cuti::where('user_id', $id)->delete();
-        Sip::where('user_id', $id)->delete();
-        Payroll::where('user_id', $id)->delete();
-        Storage::delete($delete->foto_karyawan);
-        $delete->delete();
-        return redirect('/pegawai')->with('success', 'Data Berhasil di Delete');
+        DB::beginTransaction();
+        try {
+            MappingShift::where('user_id', $id)->delete();
+            Lembur::where('user_id', $id)->delete();
+            Cuti::where('user_id', $id)->delete();
+            Sip::where('user_id', $id)->delete();
+            Payroll::where('user_id', $id)->delete();
+            Storage::delete($delete->foto_karyawan);
+            $delete->delete();
+            DB::commit();
+
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'Data Gagal didelete ']);
+            // something went wrong
+        }
+        
+        return redirect('/pegawai')->with('success', 'Data Berhasil didelete');
     }
 
     public function editpassword($id)
@@ -322,7 +367,20 @@ class KaryawanController extends Controller
     
         Storage::put($fileName, $image_base64);
 
-        $user = User::where('username', $request['path'])->update(["foto_face_recognition" => $fileName]);
+        
+        DB::beginTransaction();
+        try {
+            $user = User::where('username', $request['path'])->update(["foto_face_recognition" => $fileName]);
+            DB::commit();
+
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return response()->json('Gagal');
+            
+            // something went wrong
+        }
         return $user;
     }
 
@@ -334,8 +392,20 @@ class KaryawanController extends Controller
 
         $validatedData['password'] = Hash::make($request->password);
 
-        User::where('id', $id)->update($validatedData);
-        $request->session()->flash('success', 'Password Berhasil Diganti');
+        
+        DB::beginTransaction();
+        try {
+            User::where('id', $id)->update($validatedData);
+            DB::commit();
+
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'Password Gagal diganti']);
+            // something went wrong
+        }
+        $request->session()->flash('success', 'Password Berhasil diganti');
         return redirect('/pegawai');
     }
 
@@ -383,27 +453,39 @@ class KaryawanController extends Controller
         $daterange = new \DatePeriod($begin, $interval ,$end);
 
 
-        foreach ($daterange as $date) {
-            $tanggal = $date->format("Y-m-d");
+        
+        DB::beginTransaction();
+        try {
+            foreach ($daterange as $date) {
+                $tanggal = $date->format("Y-m-d");
 
-            if ($request["shift_id"] == 1) {
-                $request["status_absen"] = "Libur";
-            } else {
-                $request["status_absen"] = "Tidak Masuk";
+                if ($request["shift_id"] == 1) {
+                    $request["status_absen"] = "Libur";
+                } else {
+                    $request["status_absen"] = "Tidak Masuk";
+                }
+
+                $request["tanggal"] = $tanggal;
+
+                $validatedData = $request->validate([
+                    'user_id' => 'required',
+                    'shift_id' => 'required',
+                    'tanggal' => 'required',
+                    'status_absen' => 'required',
+                ]);
+            
+                MappingShift::create($validatedData);
             }
+            DB::commit();
 
-            $request["tanggal"] = $tanggal;
-
-            $validatedData = $request->validate([
-                'user_id' => 'required',
-                'shift_id' => 'required',
-                'tanggal' => 'required',
-                'status_absen' => 'required',
-            ]);
-
-            MappingShift::create($validatedData);
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'Data Gagal ditambahkan ']);
+            // something went wrong
         }
-        return redirect('/pegawai/shift/' . $request["user_id"])->with('success', 'Data Berhasil di Tambahkan');
+        return redirect('/pegawai/shift/' . $request["user_id"])->with('success', 'Data Berhasil ditambahkan');
     }
 
     public function prosesTambahDinas(Request $request)
@@ -428,43 +510,77 @@ class KaryawanController extends Controller
 
         $interval = new \DateInterval('P1D'); //referensi : https://en.wikipedia.org/wiki/ISO_8601#Durations
         $daterange = new \DatePeriod($begin, $interval ,$end);
+        
+        DB::beginTransaction();
+        try {
+            foreach ($daterange as $date) {
+                $tanggal = $date->format("Y-m-d");
 
+                if ($request["shift_id"] == 1) {
+                    $request["status_absen"] = "Libur";
+                } else {
+                    $request["status_absen"] = "Tidak Masuk";
+                }
 
-        foreach ($daterange as $date) {
-            $tanggal = $date->format("Y-m-d");
+                $request["tanggal"] = $tanggal;
 
-            if ($request["shift_id"] == 1) {
-                $request["status_absen"] = "Libur";
-            } else {
-                $request["status_absen"] = "Tidak Masuk";
+                $validatedData = $request->validate([
+                    'user_id' => 'required',
+                    'shift_id' => 'required',
+                    'tanggal' => 'required',
+                    'status_absen' => 'required',
+                ]);
+
+                DinasLuar::create($validatedData);
             }
+            DB::commit();
 
-            $request["tanggal"] = $tanggal;
-
-            $validatedData = $request->validate([
-                'user_id' => 'required',
-                'shift_id' => 'required',
-                'tanggal' => 'required',
-                'status_absen' => 'required',
-            ]);
-
-            DinasLuar::create($validatedData);
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'Data Gagal ditambahkan ']);
+            // something went wrong
         }
-        return redirect('/pegawai/dinas-luar/' . $request["user_id"])->with('success', 'Data Berhasil di Tambahkan');
+        return redirect('/pegawai/dinas-luar/' . $request["user_id"])->with('success', 'Data Berhasil ditambahkan');
     }
 
     public function deleteShift(Request $request, $id)
     {
         $delete = MappingShift::find($id);
-        $delete->delete();
-        return redirect('/pegawai/shift/' . $request["user_id"])->with('success', 'Data Berhasil di Delete');
+        DB::beginTransaction();
+        try {
+            $delete->delete();
+            DB::commit();
+
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'Data Gagal didelete ']);
+            // something went wrong
+        }
+        
+        return redirect('/pegawai/shift/' . $request["user_id"])->with('success', 'Data Berhasil didelete');
     }
 
     public function deleteDinas(Request $request, $id)
     {
         $delete = DinasLuar::find($id);
-        $delete->delete();
-        return redirect('/pegawai/dinas-luar/' . $request["user_id"])->with('success', 'Data Berhasil di Delete');
+        DB::beginTransaction();
+        try {
+            $delete->delete();
+            DB::commit();
+
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'Data Gagal didelete ']);
+            // something went wrong
+        }
+        
+        return redirect('/pegawai/dinas-luar/' . $request["user_id"])->with('success', 'Data Berhasil didelete');
     }
 
     public function editShift($id)
@@ -501,9 +617,20 @@ class KaryawanController extends Controller
             'tanggal' => 'required',
             'status_absen' => 'required'
         ]);
+        DB::beginTransaction();
+        try {
+            MappingShift::where('id', $id)->update($validatedData);
+            DB::commit();
 
-        MappingShift::where('id', $id)->update($validatedData);
-        return redirect('/pegawai/shift/' . $request["user_id"])->with('success', 'Data Berhasil di Update');
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'Data Gagal diupdate']);
+            // something went wrong
+        }
+        
+        return redirect('/pegawai/shift/' . $request["user_id"])->with('success', 'Data Berhasil diupdate');
     }
 
     public function prosesEditDinas(Request $request, $id)
@@ -522,9 +649,20 @@ class KaryawanController extends Controller
             'tanggal' => 'required',
             'status_absen' => 'required'
         ]);
+        DB::beginTransaction();
+        try {
+            DinasLuar::where('id', $id)->update($validatedData);
+            DB::commit();
 
-        DinasLuar::where('id', $id)->update($validatedData);
-        return redirect('/pegawai/dinas-luar/' . $request["user_id"])->with('success', 'Data Berhasil di Update');
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'Data Gagal diupdate']);
+            // something went wrong
+        }
+        
+        return redirect('/pegawai/dinas-luar/' . $request["user_id"])->with('success', 'Data Berhasil diupdate');
     }
 
     public function myProfile()
@@ -569,9 +707,20 @@ class KaryawanController extends Controller
             $validatedData['foto_karyawan'] = $request->file('foto_karyawan')->store('foto_karyawan');
         }
 
+        DB::beginTransaction();
+        try {
+            User::where('id', $id)->update($validatedData);
+            DB::commit();
 
-        User::where('id', $id)->update($validatedData);
-        $request->session()->flash('success', 'Data Berhasil di Update');
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'Data Gagal diupdate ']);
+            // something went wrong
+        }
+        
+        $request->session()->flash('success', 'Data Berhasil diupdate');
         return redirect('/my-profile');
     }
 
@@ -589,9 +738,20 @@ class KaryawanController extends Controller
         ]);
 
         $validatedData['password'] = Hash::make($request->password);
+        DB::beginTransaction();
+        try {
+            User::where('id', $id)->update($validatedData);
+            DB::commit();
 
-        User::where('id', $id)->update($validatedData);
-        $request->session()->flash('success', 'Password Berhasil di Update');
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'Password Gagal diupdate ']);
+            // something went wrong
+        }
+        
+        $request->session()->flash('success', 'Password Berhasil diupdate');
         return redirect('/my-profile');
     }
 
@@ -615,9 +775,20 @@ class KaryawanController extends Controller
             'izin_telat' => 'required',
             'izin_pulang_cepat' => 'required'
         ]);
+        DB::beginTransaction();
+        try {
+            ResetCuti::where('id', $id)->update($validatedData);
+            DB::commit();
 
-        ResetCuti::where('id', $id)->update($validatedData);
-        return redirect('/reset-cuti')->with('success', 'Master Cuti Berhasil Diupdate');
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'Master Cuti Gagal diupdate']);
+            // something went wrong
+        }
+        
+        return redirect('/reset-cuti')->with('success', 'Master Cuti Berhasil diupdate');
     }
 
 }

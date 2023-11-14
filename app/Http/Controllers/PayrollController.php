@@ -108,8 +108,20 @@ class PayrollController extends Controller
         $validated['pot_lainnya'] = str_replace(',', '', $validated['pot_lainnya']);
         $validated['lembur'] = str_replace(',', '', $validated['lembur']);
 
-        Payroll::create($validated);
-        return redirect('/payroll')->with('success', 'Data Berhasil di Tambahkan');
+        
+        DB::beginTransaction();
+        try {
+            Payroll::create($validated);
+            DB::commit();
+
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'Data Gagal ditambahkan ']);
+            // something went wrong
+        }
+        return redirect('/payroll')->with('success', 'Data Berhasil ditambahkan');
     }
 
     public function edit($id)
@@ -190,15 +202,38 @@ class PayrollController extends Controller
         $validated['tunjangan_pph_21'] = str_replace(',', '', $validated['tunjangan_pph_21']);
         $validated['pot_lainnya'] = str_replace(',', '', $validated['pot_lainnya']);
         $validated['lembur'] = str_replace(',', '', $validated['lembur']);
+        DB::beginTransaction();
+        try {
+            Payroll::where('id', $id)->update($validated);
+            DB::commit();
 
-        Payroll::where('id', $id)->update($validated);
-        return redirect('/payroll')->with('success', 'Data Berhasil di Update');
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'Data Gagal diupdate ']);
+            // something went wrong
+        }
+        
+        return redirect('/payroll')->with('success', 'Data Berhasil diupdate');
     }
     
     public function delete($id)
     {
-        Payroll::where('id', $id)->delete();
-        return redirect('/payroll')->with('success', 'Data Berhasil di Hapus');
+        DB::beginTransaction();
+        try {
+            Payroll::where('id', $id)->delete();
+            DB::commit();
+
+            // all good
+        } catch (QueryException $e) {
+        
+            DB::rollback();
+            return back()->withErrors(['msg' => 'Data Gagal dihapus ']);
+            // something went wrong
+        }
+        
+        return redirect('/payroll')->with('success', 'Data Berhasil dihapus');
     }
     
     public function download($id)
