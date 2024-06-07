@@ -18,7 +18,7 @@ class CreateFilesTable extends Migration
     }
     public function up()
     {
-        Schema::create('files', function (Blueprint $table) {
+        $this->schema->create($this->table_name, function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('jenis_file')->nullable();
             $table->uuid('user_id')->nullable();
@@ -39,6 +39,6 @@ class CreateFilesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('files');
+        $this->schema->dropIfExists($this->table_name);
     }
 }

@@ -19,7 +19,7 @@ class CreateDinasLuarsTable extends Migration
 
     public function up()
     {
-        Schema::create('dinas_luars', function (Blueprint $table) {
+        $this->schema->create($this->table_name, function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('user_id')->nullable();
             $table->uuid('shift_id')->nullable();
@@ -51,6 +51,6 @@ class CreateDinasLuarsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('dinas_luars');
+        $this->schema->dropIfExists($this->table_name);
     }
 }

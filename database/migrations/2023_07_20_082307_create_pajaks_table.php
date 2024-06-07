@@ -16,9 +16,10 @@ class CreatePajaksTable extends Migration
         $this->table_name = 'pajaks';
         $this->schema = Schema::connection($this->getConnection());
     }
+
     public function up()
     {
-        Schema::create('pajaks', function (Blueprint $table) {
+        $this->schema->create($this->table_name, function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('user_id')->nullable();
             $table->uuid('status_id')->nullable();
@@ -41,6 +42,6 @@ class CreatePajaksTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pajaks');
+        $this->schema->dropIfExists($this->table_name);
     }
 }

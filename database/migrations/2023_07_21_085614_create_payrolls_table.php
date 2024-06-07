@@ -18,7 +18,7 @@ class CreatePayrollsTable extends Migration
     }
     public function up()
     {
-        Schema::create('payrolls', function (Blueprint $table) {
+        $this->schema->create($this->table_name, function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('user_id')->nullable();
             $table->string('bulan')->nullable();
@@ -53,6 +53,6 @@ class CreatePayrollsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('payrolls');
+        $this->schema->dropIfExists($this->table_name);
     }
 }

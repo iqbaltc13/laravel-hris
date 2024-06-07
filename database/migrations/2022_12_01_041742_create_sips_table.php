@@ -19,7 +19,7 @@ class CreateSipsTable extends Migration
 
     public function up()
     {
-        Schema::create('sips', function (Blueprint $table) {
+        $this->schema->create($this->table_name, function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('user_id')->nullable();
             $table->string('nama_dokumen')->nullable();
@@ -41,6 +41,6 @@ class CreateSipsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sips');
+        $this->schema->dropIfExists($this->table_name);
     }
 }

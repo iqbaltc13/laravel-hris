@@ -19,7 +19,7 @@ class CreateLokasisTable extends Migration
 
     public function up()
     {
-        Schema::create('lokasis', function (Blueprint $table) {
+        $this->schema->create($this->table_name, function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('nama_lokasi')->nullable();
             $table->string('lat_kantor')->nullable();
@@ -44,6 +44,6 @@ class CreateLokasisTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('lokasis');
+        $this->schema->dropIfExists($this->table_name);
     }
 }

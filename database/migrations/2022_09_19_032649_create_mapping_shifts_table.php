@@ -19,7 +19,7 @@ class CreateMappingShiftsTable extends Migration
 
     public function up()
     {
-        Schema::create('mapping_shifts', function (Blueprint $table) {
+        $this->schema->create($this->table_name, function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('user_id')->nullable();
             $table->uuid('shift_id')->nullable();
@@ -53,6 +53,6 @@ class CreateMappingShiftsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('mapping_shifts');
+        $this->schema->dropIfExists($this->table_name);
     }
 }

@@ -19,7 +19,7 @@ class CreateCutisTable extends Migration
 
     public function up()
     {
-        Schema::create('cutis', function (Blueprint $table) {
+        $this->schema->create($this->table_name, function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('user_id')->nullable();
             $table->string('nama_cuti')->nullable();
@@ -44,6 +44,6 @@ class CreateCutisTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cutis');
+        $this->schema->dropIfExists($this->table_name);
     }
 }

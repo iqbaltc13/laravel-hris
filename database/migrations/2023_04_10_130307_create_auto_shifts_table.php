@@ -19,7 +19,7 @@ class CreateAutoShiftsTable extends Migration
 
     public function up()
     {
-        Schema::create('auto_shifts', function (Blueprint $table) {
+        $this->schema->create($this->table_name, function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('jabatan_id')->nullable();
             $table->uuid('shift_id')->nullable();
@@ -39,6 +39,6 @@ class CreateAutoShiftsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('auto_shifts');
+        $this->schema->dropIfExists($this->table_name);
     }
 }

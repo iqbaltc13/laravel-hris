@@ -19,7 +19,7 @@ class CreateUsersTable extends Migration
 
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        $this->schema->create($this->table_name, function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name')->nullable();
             $table->string('foto_karyawan')->nullable();
@@ -63,6 +63,6 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        $this->schema->dropIfExists($this->table_name);
     }
 }

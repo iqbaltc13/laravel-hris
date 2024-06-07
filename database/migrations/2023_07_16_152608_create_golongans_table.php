@@ -16,9 +16,10 @@ class CreateGolongansTable extends Migration
         $this->table_name = 'golongans';
         $this->schema = Schema::connection($this->getConnection());
     }
+
     public function up()
     {
-        Schema::create('golongans', function (Blueprint $table) {
+        $this->schema->create($this->table_name, function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name')->nullable();
             $table->uuid('created_by_id')->nullable();
@@ -37,6 +38,6 @@ class CreateGolongansTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('golongans');
+        $this->schema->dropIfExists($this->table_name);
     }
 }

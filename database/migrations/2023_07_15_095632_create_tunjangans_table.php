@@ -16,9 +16,10 @@ class CreateTunjangansTable extends Migration
         $this->table_name = 'tunjangans';
         $this->schema = Schema::connection($this->getConnection());
     }
+
     public function up()
     {
-        Schema::create('tunjangans', function (Blueprint $table) {
+        $this->schema->create($this->table_name, function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('golongan_id')->nullable();
             $table->decimal('tunjangan_makan', 15, 2)->default(0);
@@ -39,6 +40,6 @@ class CreateTunjangansTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tunjangans');
+        $this->schema->dropIfExists($this->table_name);
     }
 }

@@ -19,7 +19,7 @@ class CreateShiftsTable extends Migration
 
     public function up()
     {
-        Schema::create('shifts', function (Blueprint $table) {
+        $this->schema->create($this->table_name, function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('nama_shift')->nullable();
             $table->string('jam_masuk')->nullable();
@@ -40,6 +40,6 @@ class CreateShiftsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('shifts');
+        $this->schema->dropIfExists($this->table_name);
     }
 }

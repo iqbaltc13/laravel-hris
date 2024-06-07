@@ -19,7 +19,7 @@ class CreateLembursTable extends Migration
 
     public function up()
     {
-        Schema::create('lemburs', function (Blueprint $table) {
+        $this->schema->create($this->table_name, function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('user_id')->nullable();
             $table->string('tanggal')->nullable();
@@ -54,6 +54,6 @@ class CreateLembursTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('lemburs');
+        $this->schema->dropIfExists($this->table_name);
     }
 }

@@ -19,7 +19,7 @@ class CreateResetCutisTable extends Migration
 
     public function up()
     {
-        Schema::create('reset_cutis', function (Blueprint $table) {
+        $this->schema->create($this->table_name, function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('izin_cuti')->nullable();
             $table->string('izin_dinas_luar')->nullable();
@@ -45,6 +45,6 @@ class CreateResetCutisTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('reset_cutis');
+        $this->schema->dropIfExists($this->table_name);
     }
 }
