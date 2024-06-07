@@ -11,11 +11,16 @@ class CreateStatusPtkpsTable extends Migration
      *
      * @return void
      */
+    public function __construct()
+    {
+        $this->table_name = 'status_ptkps';
+        $this->schema = Schema::connection($this->getConnection());
+    }
     public function up()
     {
         Schema::create('status_ptkps', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('name');
+            $table->string('name')->nullable();
             $table->decimal('ptkp_2016', 15, 2)->default(0);
             $table->decimal('ptkp_2015', 15, 2)->default(0);
             $table->decimal('ptkp_2009_2012', 15, 2)->default(0);

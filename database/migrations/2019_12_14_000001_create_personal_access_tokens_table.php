@@ -11,12 +11,18 @@ class CreatePersonalAccessTokensTable extends Migration
      *
      * @return void
      */
+    public function __construct()
+    {
+        $this->table_name = 'personal_access_tokens';
+        $this->schema = Schema::connection($this->getConnection());
+    }
+
     public function up()
     {
         Schema::create('personal_access_tokens', function (Blueprint $table) {
             $table->id();
             $table->morphs('tokenable');
-            $table->string('name');
+            $table->string('name')->nullable();
             $table->string('token', 64)->unique();
             $table->text('abilities')->nullable();
             $table->dateTime('last_used_at')->nullable();

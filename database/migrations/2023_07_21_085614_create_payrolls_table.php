@@ -11,13 +11,18 @@ class CreatePayrollsTable extends Migration
      *
      * @return void
      */
+    public function __construct()
+    {
+        $this->table_name = 'payrolls';
+        $this->schema = Schema::connection($this->getConnection());
+    }
     public function up()
     {
         Schema::create('payrolls', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('user_id')->nullable();
-            $table->string('bulan');
-            $table->string('tahun');
+            $table->string('bulan')->nullable();
+            $table->string('tahun')->nullable();
             $table->uuid('status_id')->nullable();
             $table->foreign('status_id')->references('id')->on('status_ptkps');
             $table->decimal('gaji', 15, 2)->default(0);

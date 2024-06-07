@@ -11,17 +11,23 @@ class CreateLembursTable extends Migration
      *
      * @return void
      */
+    public function __construct()
+    {
+        $this->table_name = 'lemburs';
+        $this->schema = Schema::connection($this->getConnection());
+    }
+
     public function up()
     {
         Schema::create('lemburs', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('user_id')->nullable();
-            $table->string('tanggal');
-            $table->string('jam_masuk');
-            $table->string('lat_masuk');
-            $table->string('long_masuk');
-            $table->string('jarak_masuk');
-            $table->string('foto_jam_masuk');
+            $table->string('tanggal')->nullable();
+            $table->string('jam_masuk')->nullable();
+            $table->string('lat_masuk')->nullable();
+            $table->string('long_masuk')->nullable();
+            $table->string('jarak_masuk')->nullable();
+            $table->string('foto_jam_masuk')->nullable();
             $table->string('jam_keluar')->nullable();
             $table->string('lat_keluar')->nullable();
             $table->string('long_keluar')->nullable();

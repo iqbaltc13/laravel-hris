@@ -11,6 +11,11 @@ class CreatePajaksTable extends Migration
      *
      * @return void
      */
+    public function __construct()
+    {
+        $this->table_name = 'pajaks';
+        $this->schema = Schema::connection($this->getConnection());
+    }
     public function up()
     {
         Schema::create('pajaks', function (Blueprint $table) {
@@ -18,8 +23,8 @@ class CreatePajaksTable extends Migration
             $table->uuid('user_id')->nullable();
             $table->uuid('status_id')->nullable();
             $table->foreign('status_id')->references('id')->on('status_ptkps');
-            $table->string('bulan');
-            $table->string('tahun');
+            $table->string('bulan')->nullable();
+            $table->string('tahun')->nullable();
             $table->uuid('created_by_id')->nullable();
             $table->uuid('updated_by_id')->nullable();
             $table->uuid('deleted_by_id')->nullable();

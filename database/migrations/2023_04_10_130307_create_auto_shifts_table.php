@@ -11,6 +11,12 @@ class CreateAutoShiftsTable extends Migration
      *
      * @return void
      */
+    public function __construct()
+    {
+        $this->table_name = 'auto_shifts';
+        $this->schema = Schema::connection($this->getConnection());
+    }
+
     public function up()
     {
         Schema::create('auto_shifts', function (Blueprint $table) {

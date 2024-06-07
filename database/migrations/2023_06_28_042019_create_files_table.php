@@ -11,13 +11,18 @@ class CreateFilesTable extends Migration
      *
      * @return void
      */
+    public function __construct()
+    {
+        $this->table_name = 'files';
+        $this->schema = Schema::connection($this->getConnection());
+    }
     public function up()
     {
         Schema::create('files', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('jenis_file');
+            $table->string('jenis_file')->nullable();
             $table->uuid('user_id')->nullable();
-            $table->string('fileUpload');
+            $table->string('fileUpload')->nullable();
             $table->uuid('created_by_id')->nullable();
             $table->uuid('updated_by_id')->nullable();
             $table->uuid('deleted_by_id')->nullable();

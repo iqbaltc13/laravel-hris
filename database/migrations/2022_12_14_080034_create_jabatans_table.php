@@ -11,11 +11,17 @@ class CreateJabatansTable extends Migration
      *
      * @return void
      */
+    public function __construct()
+    {
+        $this->table_name = 'jabatans';
+        $this->schema = Schema::connection($this->getConnection());
+    }
+
     public function up()
     {
         Schema::create('jabatans', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('nama_jabatan');
+            $table->string('nama_jabatan')->nullable();
             $table->uuid('created_by_id')->nullable();
             $table->uuid('updated_by_id')->nullable();
             $table->uuid('deleted_by_id')->nullable();

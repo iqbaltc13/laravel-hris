@@ -11,13 +11,19 @@ class CreateShiftsTable extends Migration
      *
      * @return void
      */
+    public function __construct()
+    {
+        $this->table_name = 'shifts';
+        $this->schema = Schema::connection($this->getConnection());
+    }
+
     public function up()
     {
         Schema::create('shifts', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('nama_shift');
-            $table->string('jam_masuk');
-            $table->string('jam_keluar');
+            $table->string('nama_shift')->nullable();
+            $table->string('jam_masuk')->nullable();
+            $table->string('jam_keluar')->nullable();
             $table->uuid('created_by_id')->nullable();
             $table->uuid('updated_by_id')->nullable();
             $table->uuid('deleted_by_id')->nullable();

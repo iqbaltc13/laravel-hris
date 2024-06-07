@@ -11,13 +11,19 @@ class CreateSipsTable extends Migration
      *
      * @return void
      */
+    public function __construct()
+    {
+        $this->table_name = 'sips';
+        $this->schema = Schema::connection($this->getConnection());
+    }
+
     public function up()
     {
         Schema::create('sips', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('user_id')->nullable();
-            $table->string('nama_dokumen');
-            $table->string('tanggal_berakhir');
+            $table->string('nama_dokumen')->nullable();
+            $table->string('tanggal_berakhir')->nullable();
             $table->string('file')->nullable();
             $table->uuid('created_by_id')->nullable();
             $table->uuid('updated_by_id')->nullable();

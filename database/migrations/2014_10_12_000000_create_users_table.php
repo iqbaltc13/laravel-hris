@@ -11,31 +11,37 @@ class CreateUsersTable extends Migration
      *
      * @return void
      */
+    public function __construct()
+    {
+        $this->table_name = 'users';
+        $this->schema = Schema::connection($this->getConnection());
+    }
+
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('name');
+            $table->string('name')->nullable();
             $table->string('foto_karyawan')->nullable();
             $table->string('foto_face_recognition')->nullable();
-            $table->string('email');
-            $table->string('telepon');
-            $table->string('username');
-            $table->string('password');
-            $table->string('tgl_lahir');
-            $table->string('gender');
-            $table->string('tgl_join');
-            $table->string('status_nikah');
-            $table->text('alamat');
-            $table->string('izin_cuti');
-            $table->string('izin_dinas_luar');
-            $table->string('izin_sakit');
-            $table->string('izin_cek_kesehatan');
-            $table->string('izin_keperluan_pribadi');
-            $table->string('izin_telat');
-            $table->string('izin_pulang_cepat');
-            $table->string('izin_lainnya');
-            $table->string('is_admin');
+            $table->string('email')->nullable();;
+            $table->string('telepon')->nullable();;
+            $table->string('username')->nullable();;
+            $table->string('password')->nullable();;
+            $table->string('tgl_lahir')->nullable();;
+            $table->string('gender')->nullable();;
+            $table->string('tgl_join')->nullable();;
+            $table->string('status_nikah')->nullable();;
+            $table->text('alamat')->nullable();;
+            $table->string('izin_cuti')->nullable();
+            $table->string('izin_dinas_luar')->nullable();
+            $table->string('izin_sakit')->nullable();
+            $table->string('izin_cek_kesehatan')->nullable();
+            $table->string('izin_keperluan_pribadi')->nullable();
+            $table->string('izin_telat')->nullable();
+            $table->string('izin_pulang_cepat')->nullable();
+            $table->string('izin_lainnya')->nullable();
+            $table->string('is_admin')->nullable();
             $table->uuid('jabatan_id')->nullable();
             $table->uuid('golongan_id')->nullable();
             $table->uuid('lokasi_id')->nullable();

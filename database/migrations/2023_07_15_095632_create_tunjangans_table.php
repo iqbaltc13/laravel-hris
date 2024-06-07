@@ -11,11 +11,16 @@ class CreateTunjangansTable extends Migration
      *
      * @return void
      */
+    public function __construct()
+    {
+        $this->table_name = 'tunjangans';
+        $this->schema = Schema::connection($this->getConnection());
+    }
     public function up()
     {
         Schema::create('tunjangans', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('golongan_id');
+            $table->uuid('golongan_id')->nullable();
             $table->decimal('tunjangan_makan', 15, 2)->default(0);
             $table->decimal('tunjangan_transport', 15, 2)->default(0);
             $table->uuid('created_by_id')->nullable();

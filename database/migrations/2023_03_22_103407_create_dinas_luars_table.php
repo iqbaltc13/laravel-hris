@@ -11,13 +11,19 @@ class CreateDinasLuarsTable extends Migration
      *
      * @return void
      */
+    public function __construct()
+    {
+        $this->table_name = 'dinas_luars';
+        $this->schema = Schema::connection($this->getConnection());
+    }
+
     public function up()
     {
         Schema::create('dinas_luars', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('user_id')->nullable();
             $table->uuid('shift_id')->nullable();
-            $table->string('tanggal');
+            $table->string('tanggal')->nullable();
             $table->string('jam_absen')->nullable();
             $table->string('telat')->nullable();
             $table->string('lat_absen')->nullable();

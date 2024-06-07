@@ -11,11 +11,16 @@ class CreateGolongansTable extends Migration
      *
      * @return void
      */
+    public function __construct()
+    {
+        $this->table_name = 'golongans';
+        $this->schema = Schema::connection($this->getConnection());
+    }
     public function up()
     {
         Schema::create('golongans', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('name');
+            $table->string('name')->nullable();
             $table->uuid('created_by_id')->nullable();
             $table->uuid('updated_by_id')->nullable();
             $table->uuid('deleted_by_id')->nullable();

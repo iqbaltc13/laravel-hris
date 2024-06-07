@@ -11,15 +11,21 @@ class CreateFailedJobsTable extends Migration
      *
      * @return void
      */
+    public function __construct()
+    {
+        $this->table_name = 'failed_jobs';
+        $this->schema = Schema::connection($this->getConnection());
+    }
+
     public function up()
     {
         Schema::create('failed_jobs', function (Blueprint $table) {
             $table->id();
             $table->string('uuid')->unique();
-            $table->text('connection');
-            $table->text('queue');
-            $table->longText('payload');
-            $table->longText('exception');
+            $table->text('connection')->nullable();
+            $table->text('queue')->nullable();
+            $table->longText('payload')->nullable();
+            $table->longText('exception')->nullable();
             $table->dateTime('failed_at')->useCurrent();
         });
     }

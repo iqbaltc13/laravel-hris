@@ -11,13 +11,19 @@ class CreateMappingShiftsTable extends Migration
      *
      * @return void
      */
+    public function __construct()
+    {
+        $this->table_name = 'mapping_shifts';
+        $this->schema = Schema::connection($this->getConnection());
+    }
+
     public function up()
     {
         Schema::create('mapping_shifts', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('user_id')->nullable();
             $table->uuid('shift_id')->nullable();
-            $table->date('tanggal');
+            $table->date('tanggal')->nullable();
             $table->string('jam_absen')->nullable();
             $table->string('telat')->nullable();
             $table->string('lat_absen')->nullable();
