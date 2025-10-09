@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\Uuids;
 
 class Shift extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, Uuids;
     protected $guarded = [
 
     ];
@@ -52,7 +53,7 @@ class Shift extends Model
     {
         return $this->hasMany(AutoShift::class);
     }
-    
+
     public function dinasLuar()
     {
         return $this->hasMany(DinasLuar::class);

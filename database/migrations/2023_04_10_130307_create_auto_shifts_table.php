@@ -20,12 +20,12 @@ class CreateAutoShiftsTable extends Migration
     public function up()
     {
         $this->schema->create($this->table_name, function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->uuid('jabatan_id')->nullable();
-            $table->uuid('shift_id')->nullable();
-            $table->uuid('created_by_id')->nullable();
-            $table->uuid('updated_by_id')->nullable();
-            $table->uuid('deleted_by_id')->nullable();
+            $table->string('id')->primary();
+            $table->string('jabatan_id')->nullable();
+            $table->string('shift_id')->nullable();
+            $table->string('created_by_id')->nullable();
+            $table->string('updated_by_id')->nullable();
+            $table->string('deleted_by_id')->nullable();
             $table->dateTime('created_at')->nullable();
             $table->dateTime('updated_at')->nullable();
             $table->dateTime('deleted_at')->nullable();

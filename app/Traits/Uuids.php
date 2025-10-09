@@ -1,21 +1,12 @@
 <?php
-
-namespace App\Models;
-
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+namespace App\Traits;
 use Illuminate\Support\Str;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Traits\Uuids;
-
-class Golongan extends Model
+trait Uuids
 {
-    use HasFactory, SoftDeletes, Uuids;
-    protected $guarded = [
-
-    ];
-    protected $dates = ['deleted_at'];
-     protected static function boot()
+   /**
+     * Boot function from Laravel.
+     */
+    protected static function boot()
     {
         parent::boot();
         static::creating(function ($model) {
@@ -24,7 +15,7 @@ class Golongan extends Model
             }
         });
     }
-     /**
+   /**
      * Get the value indicating whether the IDs are incrementing.
      *
      * @return bool
@@ -33,8 +24,7 @@ class Golongan extends Model
     {
         return false;
     }
-
-    /**
+   /**
      * Get the auto-incrementing key type.
      *
      * @return string
@@ -42,15 +32,5 @@ class Golongan extends Model
     public function getKeyType()
     {
         return 'string';
-    }
-
-    public function User()
-    {
-        return $this->hasMany(User::class);
-    }
-
-    public function Tunjangan()
-    {
-        return $this->hasMany(Tunjangan::class);
     }
 }

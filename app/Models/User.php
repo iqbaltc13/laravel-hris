@@ -9,10 +9,13 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\Uuids;
+
+
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes, Uuids;
 
     /**
      * The attributes that are mass assignable.
@@ -56,12 +59,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(MappingShift::class);
     }
-    
+
     public function DinasLuar()
     {
         return $this->hasMany(DinasLuar::class);
     }
-    
+
     public function Sip()
     {
         return $this->hasMany(Sip::class);

@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\Uuids;
 
 class Lokasi extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, Uuids;
 
     protected $guarded = [
 
@@ -43,7 +44,7 @@ class Lokasi extends Model
     {
         return 'string';
     }
-    
+
     public function User()
     {
         return $this->hasMany(User::class);

@@ -20,7 +20,7 @@ class CreateUsersTable extends Migration
     public function up()
     {
         $this->schema->create($this->table_name, function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            $table->string('id')->primary();
             $table->string('name')->nullable();
             $table->string('foto_karyawan')->nullable();
             $table->string('foto_face_recognition')->nullable();
@@ -42,14 +42,14 @@ class CreateUsersTable extends Migration
             $table->string('izin_pulang_cepat')->nullable();
             $table->string('izin_lainnya')->nullable();
             $table->string('is_admin')->nullable();
-            $table->uuid('jabatan_id')->nullable();
-            $table->uuid('golongan_id')->nullable();
-            $table->uuid('lokasi_id')->nullable();
+            $table->string('jabatan_id')->nullable();
+            $table->string('golongan_id')->nullable();
+            $table->string('lokasi_id')->nullable();
             $table->dateTime('email_verified_at')->nullable();
             $table->rememberToken();
-            $table->uuid('created_by_id')->nullable();
-            $table->uuid('updated_by_id')->nullable();
-            $table->uuid('deleted_by_id')->nullable();
+            $table->string('created_by_id')->nullable();
+            $table->string('updated_by_id')->nullable();
+            $table->string('deleted_by_id')->nullable();
             $table->dateTime('created_at')->nullable();
             $table->dateTime('updated_at')->nullable();
             $table->dateTime('deleted_at')->nullable();

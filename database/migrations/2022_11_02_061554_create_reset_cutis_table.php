@@ -20,7 +20,7 @@ class CreateResetCutisTable extends Migration
     public function up()
     {
         $this->schema->create($this->table_name, function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            $table->string('id')->primary();
             $table->string('izin_cuti')->nullable();
             $table->string('izin_dinas_luar')->nullable();
             $table->string('izin_sakit')->nullable();
@@ -29,9 +29,9 @@ class CreateResetCutisTable extends Migration
             $table->string('izin_telat')->nullable();
             $table->string('izin_pulang_cepat')->nullable();
             $table->string('izin_lainnya')->nullable();
-            $table->uuid('created_by_id')->nullable();
-            $table->uuid('updated_by_id')->nullable();
-            $table->uuid('deleted_by_id')->nullable();
+            $table->string('created_by_id')->nullable();
+            $table->string('updated_by_id')->nullable();
+            $table->string('deleted_by_id')->nullable();
             $table->dateTime('created_at')->nullable();
             $table->dateTime('updated_at')->nullable();
             $table->dateTime('deleted_at')->nullable();

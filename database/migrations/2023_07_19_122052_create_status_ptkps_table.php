@@ -20,14 +20,14 @@ class CreateStatusPtkpsTable extends Migration
     public function up()
     {
         $this->schema->create('status_ptkps', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            $table->string('id')->primary();
             $table->string('name')->nullable();
             $table->decimal('ptkp_2016', 15, 2)->default(0);
             $table->decimal('ptkp_2015', 15, 2)->default(0);
             $table->decimal('ptkp_2009_2012', 15, 2)->default(0);
-            $table->uuid('created_by_id')->nullable();
-            $table->uuid('updated_by_id')->nullable();
-            $table->uuid('deleted_by_id')->nullable();
+            $table->string('created_by_id')->nullable();
+            $table->string('updated_by_id')->nullable();
+            $table->string('deleted_by_id')->nullable();
             $table->dateTime('created_at')->nullable();
             $table->dateTime('updated_at')->nullable();
             $table->dateTime('deleted_at')->nullable();
