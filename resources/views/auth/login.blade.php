@@ -26,7 +26,7 @@
         @endif
         <div class="card-body login-card-body">
             <p class="login-box-msg"><i class="fa fa-solid fa-key"></i> Sign In</p>
-    
+
             <form action="{{ url('/login-proses') }}" method="post">
                 @csrf
                 <div class="input-group mb-3">
@@ -66,12 +66,12 @@
                 <div class="col-4">
                     <a href="{{ url('/register') }}" class="btn btn-success btn-sm float-left">Register Pegawai</a>
                 </div>
-                <div class="col-4">
+                {{-- <div class="col-4">
                     <a href="{{ url('/presensi') }}" class="btn btn-warning btn-sm float-left">Presensi Masuk</a>
                 </div>
                 <div class="col-4">
                     <a href="{{ url('/presensi-pulang') }}" class="btn btn-info btn-sm float-left">Presensi Pulang</a>
-                </div>
+                </div> --}}
             </div>
         </div>
         <!-- /.login-card-body -->
