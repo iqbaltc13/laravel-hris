@@ -30,7 +30,7 @@
                                 <td>{{ $dl->lat_kantor }}</td>
                                 <td>{{ $dl->long_kantor }}</td>
                                 <td>{{ $dl->radius }}</td>
-                                <td>{{ $dl->CreatedBy->name }}</td>
+                                <td>{{ $dl->CreatedBy ? $dl->CreatedBy->name : '' }}</td>
                                 <td>
                                     <a href="{{ url('/lokasi-kantor/edit/'.$dl->id) }}" class="btn btn-sm btn-warning"><i class="fa fa-solid fa-edit"></i></a>
                                     <form action="{{ url('/lokasi-kantor/delete/'.$dl->id) }}" method="post" class="d-inline">

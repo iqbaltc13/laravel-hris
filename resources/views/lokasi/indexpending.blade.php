@@ -4,7 +4,7 @@
         <div class="card">
             <div class="card-header">
                 <center>
-                    
+
                 </center>
             </div>
             <!-- /.card-header -->
@@ -31,7 +31,7 @@
                                 <td>{{ $dl->long_kantor }}</td>
                                 <td>{{ $dl->radius }}</td>
                                 <td>{{ $dl->status }}</td>
-                                <td>{{ $dl->CreatedBy->name }}</td>
+                                <td>{{ $dl->CreatedBy ? $dl->CreatedBy->name : '' }}</td>
                                 <td>
                                     <form action="{{ url('/lokasi-kantor/update-pending-location/'.$dl->id) }}" method="post" class="d-inline">
                                         @method('put')
