@@ -31,7 +31,7 @@
                                 <td>{{ $dl->long_kantor }}</td>
                                 <td>{{ $dl->radius }}</td>
                                 <td>{{ $dl->status }}</td>
-                                <td>{{ dl->CreatedBy ? $dl->CreatedBy->name : '' }}</td>
+                                <td>{{ $dl->CreatedBy ? $dl->CreatedBy->name : '' }}</td>
                                 <td>
                                     @if ($dl->status == 'approved')
                                         <span class="badge badge-success">{{ $dl->status }}</span>
