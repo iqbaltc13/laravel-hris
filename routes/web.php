@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\DinasLuarController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\authController;
+use App\Http\Controllers\authController as AuthController;
 use App\Http\Controllers\CutiController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\AbsenController;
